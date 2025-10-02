@@ -2,7 +2,6 @@ const dpi = window.devicePixelRatio;
 const width = window.innerWidth * dpi;
 const height = window.innerHeight * dpi;
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
 let playerName;
 let playerNameInput = document.getElementById('playerName');
 let errorMessage = document.getElementById('errorMessage');
@@ -19,6 +18,7 @@ nameForm.style.display = 'none';
 requestAnimationFrame(function() {
 startGame(playerName); });
 });
+///END FUNCION DEL BOTON JUGAR PLAY SE INICIA JUEGO
     
 function startGame(playerName) {
    	let player;
@@ -723,15 +723,10 @@ let toggleBox = () => {
     	ZoomOut = 1;
 	let playerLocal = players[socket.id];
     	if (isBoxChecked) {
-        //this.cameras.main.setZoom(8 / dpi);
-		//this.scene.get('GameScene').cameras.main.setZoom(8 / dpi);
-        //let zoomFactor = this.cameras.main.zoom; 
 		const zoomLevel = isMobile ? 8 / dpi : 1 / dpi; // Menos zoom en PC
                 this.scene.get('GameScene').cameras.main.setZoom(zoomLevel);
 
 		    	ZoomOut = 1;
-
-		//playerLocal.fontSizePlayer(12);
 		Object.values(players).forEach(player => {
     		player.fontSizePlayer(12); // Cambia el tamaño de la fuente a 24px para cada jugador
 		});
@@ -740,9 +735,6 @@ let toggleBox = () => {
                 this.scene.get('GameScene').cameras.main.setZoom(zoomLevel);
 
 		    	ZoomOut = 2;
-
-		
-		//playerLocal.fontSizePlayer(24);
 		Object.values(players).forEach(player => {
     		player.fontSizePlayer(24); // Cambia el tamaño de la fuente a 24px para cada jugador
 		});
@@ -920,46 +912,22 @@ drawCheck(isChecked);
             debug: false // Puedes activar esto para ver los cuerpos de colisión
         			} },
             backgroundColor: '#000000',
-		      //      backgroundColor: '#0B1E00',
 
             scale: {
-              // mode: Phaser.Scale.FIT,
-		//mode: Phaser.Scale.RESIZE, // Mantén el tamaño del juego fijo
-
 		        mode: isMobile ? Phaser.Scale.RESIZE : Phaser.Scale.RESIZE,
 
                 autoCenter: Phaser.Scale.CENTER_BOTH
             },
         	scene: [GameScene, UIScene],
            pixelArt: false,
-//pixelArt: true,
             roundPixels: false,
 antialias: true,
 		resolution: window.devicePixelRatio * 2
 
-		/* render: {
-        pixelArt: false,
-        antialias: true,
-    },
-
-
-*/
         };
 
         const game = new Phaser.Game(config);
 	game.scene.start('GameScene');
-
-	// Listener para el redimensionamiento de la ventana
-/*window.addEventListener('resize', () => {
-    const newWidth = window.innerWidth * dpi;
-    const newHeight = window.innerHeight * dpi;
-    game.scale.resize(newWidth, newHeight);
-    game.scene.scenes.forEach(scene => {
-        if (scene.cameras.main) {
-            scene.cameras.main.setViewport(0, 0, newWidth, newHeight);
-        }
-    });
-});*/
 
 	
 }  //END FUNCTION START GAME!!!!
