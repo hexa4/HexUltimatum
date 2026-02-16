@@ -332,155 +332,12 @@ this.updateRedVertices.call(this, randomVertex.x, randomVertex.y);
 //console.log("COORDS", randomVertex.x,randomVertex.y);
 this.input.on('pointerdown', this.onPointerDown, this);
 
-socket.emit('LlamargreenCirclesS');
 
 //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
-//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
-//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
-//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
-//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
-socket.on('updatePlayers', updatedPlayers => {
-console.log('SOCKET UPDATE PLAYERS');	
-for (const playerId in updatedPlayers) {
-const playerData = updatedPlayers[playerId];
-console.log("Jugador:", playerData);
-// Si el jugador ya existe, actualiza su posición
-if (players[playerData.id]) {
-} else {
-// Si el jugador no existe, créalo y añádelo al objeto players
-const playerKey = `player_${playerData.id}`; // Llave única para cada jugador
-if (!this.textures.exists(playerKey)) {
-const svgBlob = new Blob([playerData.skin], { type: 'image/svg+xml;charset=utf-8' });
-const svgUrl = URL.createObjectURL(svgBlob);
-this.load.image(playerData.id, svgUrl);
-this.load.once('complete', () => {
-//INVALIDAR IMAGEN DESPEUS DE CARGARLA
-URL.revokeObjectURL(svgUrl);
-const player = new Player(this, playerData.id, playerData.name, playerData.x, playerData.y, 10, playerData.skin, this.greenCirclesGroup, playerData.puntos,playerData.color);
-players[playerData.id] = player;
-console.log('SE CREA PLAYER', players[playerData.id]);
-socket.emit('crearTopPlayers');
-
-if(socket.id===playerData.id){
-console.log("Ejecutar Top Players");
-//socket.emit('crearTopPlayers');
-}
-});
-this.load.start();
-} else {
-const player = new Player(this, playerData.id, playerData.name, playerData.x, playerData.y, 10, playerData.skin, this.greenCirclesGroup, playerData.puntos,playerData.color);
-players[playerData.id] = player;
-}
-}
-}
-});
 
 ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - 
-///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - 
-///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - 
-///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - 
-socket.on('animatePlayer', animationData => {
-    	const playerId = animationData.playerId;
-    	const player = players[playerId];
-	const data = animationData.data;
-    	const endX = data.end.x;
-    	const endY = data.end.y;
-    
-	this.tweens.add({
-                targets: [player.circle],
-               	x: { value: endX, duration: data.speed, ease: 'Power2' },
-    		y: { value: endY, duration: data.speed, ease: 'Power2' },
-                duration: data.speed,
-                ease: 'Power2',
-                onUpdate: function(tween) {
-			player.text.setPosition(player.circle.x, player.circle.y - 20);
-              		},
-               	onComplete: function() {
-               	if(socket.id === playerId){
-        		this.updateRedVertices.call(this, endX, endY);
-        		socket.emit('updatePosition', { x: endX, y: endY });
-        		noMover = false;
-             
-        	if(Cam===2){  
-        		//INTENTO LIMITES CAMARA NO MARK:
-        		let cameraX = this.cameras.main.scrollX;
-        		let cameraY = this.cameras.main.scrollY;
-        		let rightLimit = (window.innerWidth*dpi) * 0.7;
-        		let leftLimit = (window.innerWidth*dpi) * 0.3;
-        		let bottomLimit = (window.innerHeight*dpi) * 0.7;
-        		let topLimit = (window.innerHeigh*dpi) * 0.3;
-        		let playerRelativeX = -cameraX + player.circle.x;
-        		let playerRelativeY = -cameraY + player.circle.y;
-			const playerLocal = players[socket.id];
-				
-			//DERECHA
-			if (playerRelativeX >= rightLimit) {      
-				console.log(`70% ALCANZADO RIGHT`);
-				playerLocal.moveCameraToCenter();
-			}     
-			//IZQUIERDA
-			if (playerRelativeX <= leftLimit) {    
-				playerLocal.moveCameraToCenter();
-  				console.log(`30% ALCANZADO LEFT`);
-			} 
-			//BOTTOM
-			if (playerRelativeY >= bottomLimit) { 
-				playerLocal.moveCameraToCenter();
-     				console.log(`70% ALCANZADO BOTTOM`);
-			} 
-			//TOP
-			if (playerRelativeY <= topLimit) {    
-				playerLocal.moveCameraToCenter();
-  				console.log(`30% ALCANZADO TOP`);
-			} 	
-			//END INTENTO LIMITES CAMARA NO MARK:
-		}
-		}
-    	},
-        onCompleteScope: this
-  	});
-});    
-///END ANIMATE PLAYER MOVE
+
 		
-//RECIBIR GREENCIRCLESS FROM SERVER
-socket.on('greenCirclesS', function(greenCirclesS) {
-    console.log('Recibido greenCircles:', greenCirclesS);
-    this.drawGreenCircles.call(this, greenCirclesS); // Usar call para establecer el contexto correcto
-}.bind(this));	
-
-//ELIMINAR VERDE ACTIVADO DESDE EL SERVER. DESDE EL SERVER ESTA FUNCION
-socket.on('eliminarGreenServer', (collisionIndex, myID) => {
-    	console.log(`eliminarGreenServer`);
-
-	
-    	if(myID!=socket.id){
-    	this.greenCirclesGroup.children.each((greenCircle) => {
-        if (greenCircle.z === collisionIndex) {
-        	this.textOnDestroy(this, greenCircle.x, greenCircle.y, '+1 points', '20px', '#00ff00');
-		if(greenCircle.type === 'blue'){
-       	 		this.textOnDestroy(this, greenCircle.x, greenCircle.y, '+speed', '20px', '#0000ff');
-			console.log(`SPEED ACTIVATED.`);
-		}
-            console.log(`Green circle with z = ${collisionIndex} found and destroyed.`);
-            greenCircle.destroy();   
-        } });
-    }
-
-	
-});
-
-//ELIMINAR PLAYER ACTIVADO DESDE EL SERVER. DESDE EL SERVER ESTA FUNCION
-socket.on('eliminarPlayerServer', (collisionIndex) => {
-    	console.log(`eliminarPlayerServer`);
-    	if(collisionIndex!=socket.id){
-   		const otherPlayer = players[collisionIndex];
-		console.log(`playerEliminado:`, otherPlayer);
-		this.textOnDestroy(this, otherPlayer.x, otherPlayer.y, otherPlayer.name +' eliminated!', '20px', '#ff0000');
-    		otherPlayer.destroyPlayer(collisionIndex);
-    		socket.emit('crearTopPlayers');
-    	}
-}); 
-
 game.scene.start('UIScene');
 game.scene.bringToTop('UIScene');
 
@@ -796,18 +653,6 @@ if (!container.active) {
     });
 
 
-/*
-
-this.tweens.add({
-        targets: greenCirclesGroup.getChildren(),  // Obtener todos los círculos del grupo
-        scaleX: 2,  // Cambiar la escala en el eje X
-        scaleY: 2,  // Cambiar la escala en el eje Y
-        duration: 1000,
-        yoyo: true,  // Hacer que vuelva al tamaño original
-        repeat: -1  // Repetir indefinidamente
-    });
-
-*/
 
 /////////////__________________
 
@@ -819,69 +664,6 @@ this.tweens.add({
 
 
 
-
-
-
-
-
-
-
-
-
-
-///ACTIVAR VELOCIDAD TEXTO
-activarVelocidad() {
-	fixedText7.visible = true;
-	clearInterval(intervalo);
-    	Velocidad = true;
-    	const newVel = { velocidad: Velocidad };
-    	console.log('Velocidad activada');
-    	fixedText7.setText(`X2 SPEED - 5 s`);
-    	segundosRestantes = 5;
-    	intervalo = setInterval(function() {
-        segundosRestantes--;
-        if (segundosRestantes > 0) {
-            fixedText7.setText(`X2 SPEED - ${segundosRestantes} s`);
-        } else {
-            clearInterval(intervalo);
-            Velocidad = false;
-            console.log('Velocidad desactivada');
-            const newVel = { velocidad: Velocidad };
-            //socket.emit('updateVelocidadServer', newVel);
-            fixedText7.setText(``);
-        } }, 1000); // Actualizar cada segundo
-}
-
-///TEXTO VELOCIDAD EN EL MEDIO PANTALLA
-llamarTextoSpeed(scene) {
-        const width = scene.scale.width;
-        const height = scene.scale.height;
-        const text = scene.add.text(width / 2, height / 2, '+speed!', {
-            fontSize: '40px',
-            fill: '#0000ff', resolution: dpi * 2, fontFamily: 'Roboto'
-        }).setOrigin(0.5, 0.5);
-        text.setScrollFactor(0);
-	scene.tweens.add({ targets: text, scaleX: 2, scaleY: 2, duration: 500, ease: 'Power2', yoyo: scene, 
-            onComplete: () => {
-                scene.time.addEvent({
-                    delay: 200,
-                    callback: () => { text.destroy();  }
-                }); } });
-}
-
-textOnDestroy(scene, x, y, texto, size, color) {
-            const text = scene.add.text(x, y, texto, {
-                    fontSize: size,
-                    fill: color, resolution: dpi * 2 , fontFamily: 'Roboto'
-            });
-            	text.setOrigin(0.5, 0.5); // Establece el origen del texto en su centro
-    		text.setPosition(x, y); // Reposiciona el texto
-            	scene.time.addEvent({
-                    delay: 500,
-                    callback: () => {
-                        text.destroy();
-                    } });
-}
 
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
@@ -1233,18 +1015,6 @@ antialias: true,
 
         const game = new Phaser.Game(config);
 	game.scene.start('GameScene');
-
-	// Listener para el redimensionamiento de la ventana
-/*window.addEventListener('resize', () => {
-    const newWidth = window.innerWidth * dpi;
-    const newHeight = window.innerHeight * dpi;
-    game.scale.resize(newWidth, newHeight);
-    game.scene.scenes.forEach(scene => {
-        if (scene.cameras.main) {
-            scene.cameras.main.setViewport(0, 0, newWidth, newHeight);
-        }
-    });
-});*/
 
 	
 }  //END FUNCTION START GAME!!!!
