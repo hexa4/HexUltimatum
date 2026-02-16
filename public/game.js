@@ -186,6 +186,24 @@ moveCameraToCenter() {
             onComplete: () => { } });
 }   
     
+destroyPlayer(suID) {
+        if (this.id === socket.id) {
+            this.stopCameraFollow();
+        }
+        // Eliminar el círculo del jugador
+        if (this.circle) {
+            this.circle.destroy();
+        }
+        // Eliminar el texto del jugador
+        if (this.text) {
+            this.text.destroy();
+        }
+        // Eliminar el jugador del grupo de círculos verdes si es necesario
+        if (this.greenCirclesGroup) {
+            this.greenCirclesGroup.remove(this.circle);
+        }
+        delete players[suID]; 
+} 
 
 } //END PLAYER CLASS //END PLAYER CLASS //END PLAYER CLASS //END PLAYER CLASS //END PLAYER CLASS 
 
@@ -201,7 +219,53 @@ class GameScene extends Phaser.Scene {
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene 
         create() {		
 
-	 	
+	//RECIBIR UPDATE POINTS AND SIZE Of PLAYER
+	socket.on('updatePuntos', function(myID, puntos) {
+	console.log('Recibido upDate Puntos:', myID, puntos);
+	const sizeCalc = (0.01 * puntos) + 0.2;		
+	players[myID].text.setText(players[myID].name + ' (' + puntos + ')');
+	players[myID].circle.setScale(sizeCalc); 
+	players[myID].puntos = puntos;
+	if(socket.id===myID)
+	fixedText6.setText('Points: '+puntos);
+	});	
+	
+	//RECIBIR UPDATE TOP PLAYERS
+	socket.on('updateTopPlayers', () =>  {
+	topplayers = [];
+	for (const playerId in players) {
+	const player = players[playerId];
+	console.log(`ID: ${playerId}, Nombre: ${player.name}, Puntos: ${player.puntos}`);
+	this.addPlayer(players[playerId].name, players[playerId].puntos, players[playerId].color);
+	}
+	const topPlayers = this.getTopPlayers();
+	fixedText1.setText(topPlayers.length >= 1 ? `#1 ${topPlayers[0].name}: ${topPlayers[0].puntos}` : '');
+	if (topPlayers[0] && topPlayers[0].color) {
+	fixedText1.setFill(topPlayers[0].color); }
+	fixedText2.setText(topPlayers.length >= 2 ? `#2 ${topPlayers[1].name}: ${topPlayers[1].puntos}` : '');
+	if (topPlayers[1] && topPlayers[1].color) {
+	fixedText2.setFill(topPlayers[1].color); }
+	fixedText3.setText(topPlayers.length >= 3 ? `#3 ${topPlayers[2].name}: ${topPlayers[2].puntos}` : '');
+	if (topPlayers[2] && topPlayers[2].color) {
+	fixedText3.setFill(topPlayers[2].color); }
+	fixedText4.setText(topPlayers.length >= 4 ? `#4 ${topPlayers[3].name}: ${topPlayers[3].puntos}` : '');
+	if (topPlayers[3] && topPlayers[3].color) {
+	fixedText4.setFill(topPlayers[3].color); }
+	fixedText5.setText(topPlayers.length >= 5 ? `#5 ${topPlayers[4].name}: ${topPlayers[4].puntos}` : '');
+	if (topPlayers[4] && topPlayers[4].color) {
+	fixedText5.setFill(topPlayers[4].color); }
+	});			 	
+
+	//BORRA TODOS CIRCULOS VERDES PARA VOLVER A GENERAR (DESDE SERVER ACCIONADO)
+	socket.on('borrarTodosGreen', () => {
+	console.log('BORRAR GREEN CIRCLES.');
+	this.greenCirclesGroup.getChildren().forEach(circle => {
+        // Verificar si el tipo no es 'player'
+        if (circle.type !== 'player') {
+            circle.destroy();
+        } });   	    
+	});
+   
 //CAM ZOOM INITIALIZATION
 const zoomLevel = isMobile ? 8 / dpi : 1 / dpi; // Menos zoom en PC
 this.cameras.main.setZoom(zoomLevel);
@@ -228,6 +292,21 @@ hexagonGraphics = this.add.graphics({
 redCirclesGroup = this.add.group();
 hexagonGroup = this.add.group();
 
+/*		
+for (let y = 0; y < hexagonMap.length; y++) {
+    for (let x = 0; x < hexagonMap[y].length; x++) {
+        let hexX = x * hexagonWidth * 0.75;
+        let hexY = y * hexagonHeight + (x % 2 === 0 ? 0 : hexagonHeight / 2);
+        // Opcional: Usa la dirección del hexágono si es necesario
+        let direction = hexagonMap[y][x].direction;
+        //console.log(`Hexágono en (${x}, ${y}) tiene dirección: ${direction}`);
+        this.drawHexagon2(hexX, hexY, hexagonSize);
+        hexagons.push({ x: hexX, y: hexY });
+        vertices.push(...this.getHexVertices(hexX, hexY));
+        hexagonGroup2.add(hexagonGraphics2); // Añadir el gráfico del hexágono al grupo
+    }
+}  
+	*/	
 // Crear el mapa hexagonal
 for (let y = 0; y < hexagonMap.length; y++) {
     for (let x = 0; x < hexagonMap[y].length; x++) {
@@ -253,12 +332,155 @@ this.updateRedVertices.call(this, randomVertex.x, randomVertex.y);
 //console.log("COORDS", randomVertex.x,randomVertex.y);
 this.input.on('pointerdown', this.onPointerDown, this);
 
+socket.emit('LlamargreenCirclesS');
 
 //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
+//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
+//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
+//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
+//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
+socket.on('updatePlayers', updatedPlayers => {
+console.log('SOCKET UPDATE PLAYERS');	
+for (const playerId in updatedPlayers) {
+const playerData = updatedPlayers[playerId];
+console.log("Jugador:", playerData);
+// Si el jugador ya existe, actualiza su posición
+if (players[playerData.id]) {
+} else {
+// Si el jugador no existe, créalo y añádelo al objeto players
+const playerKey = `player_${playerData.id}`; // Llave única para cada jugador
+if (!this.textures.exists(playerKey)) {
+const svgBlob = new Blob([playerData.skin], { type: 'image/svg+xml;charset=utf-8' });
+const svgUrl = URL.createObjectURL(svgBlob);
+this.load.image(playerData.id, svgUrl);
+this.load.once('complete', () => {
+//INVALIDAR IMAGEN DESPEUS DE CARGARLA
+URL.revokeObjectURL(svgUrl);
+const player = new Player(this, playerData.id, playerData.name, playerData.x, playerData.y, 10, playerData.skin, this.greenCirclesGroup, playerData.puntos,playerData.color);
+players[playerData.id] = player;
+console.log('SE CREA PLAYER', players[playerData.id]);
+socket.emit('crearTopPlayers');
+
+if(socket.id===playerData.id){
+console.log("Ejecutar Top Players");
+//socket.emit('crearTopPlayers');
+}
+});
+this.load.start();
+} else {
+const player = new Player(this, playerData.id, playerData.name, playerData.x, playerData.y, 10, playerData.skin, this.greenCirclesGroup, playerData.puntos,playerData.color);
+players[playerData.id] = player;
+}
+}
+}
+});
 
 ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - 
-
+///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - 
+///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - 
+///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - 
+socket.on('animatePlayer', animationData => {
+    	const playerId = animationData.playerId;
+    	const player = players[playerId];
+	const data = animationData.data;
+    	const endX = data.end.x;
+    	const endY = data.end.y;
+    
+	this.tweens.add({
+                targets: [player.circle],
+               	x: { value: endX, duration: data.speed, ease: 'Power2' },
+    		y: { value: endY, duration: data.speed, ease: 'Power2' },
+                duration: data.speed,
+                ease: 'Power2',
+                onUpdate: function(tween) {
+			player.text.setPosition(player.circle.x, player.circle.y - 20);
+              		},
+               	onComplete: function() {
+               	if(socket.id === playerId){
+        		this.updateRedVertices.call(this, endX, endY);
+        		socket.emit('updatePosition', { x: endX, y: endY });
+        		noMover = false;
+             
+        	if(Cam===2){  
+        		//INTENTO LIMITES CAMARA NO MARK:
+        		let cameraX = this.cameras.main.scrollX;
+        		let cameraY = this.cameras.main.scrollY;
+        		let rightLimit = (window.innerWidth*dpi) * 0.7;
+        		let leftLimit = (window.innerWidth*dpi) * 0.3;
+        		let bottomLimit = (window.innerHeight*dpi) * 0.7;
+        		let topLimit = (window.innerHeigh*dpi) * 0.3;
+        		let playerRelativeX = -cameraX + player.circle.x;
+        		let playerRelativeY = -cameraY + player.circle.y;
+			const playerLocal = players[socket.id];
+				
+			//DERECHA
+			if (playerRelativeX >= rightLimit) {      
+				console.log(`70% ALCANZADO RIGHT`);
+				playerLocal.moveCameraToCenter();
+			}     
+			//IZQUIERDA
+			if (playerRelativeX <= leftLimit) {    
+				playerLocal.moveCameraToCenter();
+  				console.log(`30% ALCANZADO LEFT`);
+			} 
+			//BOTTOM
+			if (playerRelativeY >= bottomLimit) { 
+				playerLocal.moveCameraToCenter();
+     				console.log(`70% ALCANZADO BOTTOM`);
+			} 
+			//TOP
+			if (playerRelativeY <= topLimit) {    
+				playerLocal.moveCameraToCenter();
+  				console.log(`30% ALCANZADO TOP`);
+			} 	
+			//END INTENTO LIMITES CAMARA NO MARK:
+		}
+		}
+    	},
+        onCompleteScope: this
+  	});
+});    
+///END ANIMATE PLAYER MOVE
 		
+//RECIBIR GREENCIRCLESS FROM SERVER
+socket.on('greenCirclesS', function(greenCirclesS) {
+    console.log('Recibido greenCircles:', greenCirclesS);
+    this.drawGreenCircles.call(this, greenCirclesS); // Usar call para establecer el contexto correcto
+}.bind(this));	
+
+//ELIMINAR VERDE ACTIVADO DESDE EL SERVER. DESDE EL SERVER ESTA FUNCION
+socket.on('eliminarGreenServer', (collisionIndex, myID) => {
+    	console.log(`eliminarGreenServer`);
+
+	
+    	if(myID!=socket.id){
+    	this.greenCirclesGroup.children.each((greenCircle) => {
+        if (greenCircle.z === collisionIndex) {
+        	this.textOnDestroy(this, greenCircle.x, greenCircle.y, '+1 points', '20px', '#00ff00');
+		if(greenCircle.type === 'blue'){
+       	 		this.textOnDestroy(this, greenCircle.x, greenCircle.y, '+speed', '20px', '#0000ff');
+			console.log(`SPEED ACTIVATED.`);
+		}
+            console.log(`Green circle with z = ${collisionIndex} found and destroyed.`);
+            greenCircle.destroy();   
+        } });
+    }
+
+	
+});
+
+//ELIMINAR PLAYER ACTIVADO DESDE EL SERVER. DESDE EL SERVER ESTA FUNCION
+socket.on('eliminarPlayerServer', (collisionIndex) => {
+    	console.log(`eliminarPlayerServer`);
+    	if(collisionIndex!=socket.id){
+   		const otherPlayer = players[collisionIndex];
+		console.log(`playerEliminado:`, otherPlayer);
+		this.textOnDestroy(this, otherPlayer.x, otherPlayer.y, otherPlayer.name +' eliminated!', '20px', '#ff0000');
+    		otherPlayer.destroyPlayer(collisionIndex);
+    		socket.emit('crearTopPlayers');
+    	}
+}); 
+
 game.scene.start('UIScene');
 game.scene.bringToTop('UIScene');
 
@@ -297,7 +519,62 @@ getVerticesInRadius(x, y, radius) {
 }
 
 //CLICK EN LA PANTALLA  
+//CLICK EN LA PANTALLA            
+//CLICK EN LA PANTALLA                      
+onPointerDown(pointer) { 
+	if(checkSecure===0){
+        	if(noMover===false){
+        		noMover = true;
+        let cameraX = this.cameras.main.scrollX;
+    	let cameraY = this.cameras.main.scrollY;
+    	console.log(`Camera coordinates: (${cameraX}, ${cameraY})`); 
+	console.log(`Click: (${pointer.x + cameraX}, ${pointer.y + cameraY}) `);	
+        //console.log(`ClickW: (${pointer.worldX + cameraX}, ${pointer.worldY + cameraY}) `);	
+	let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
+	console.log(`World coordinates: (${worldPoint.x}, ${worldPoint.y})`);
+	
+	let closestRedVertex = this.findClosestRedVertexToClick(pointer.x + cameraX, pointer.y + cameraY, cameraX, cameraY);
 
+	if(ZoomOut === 1){
+		 closestRedVertex = this.findClosestRedVertexToClick(pointer.x + cameraX, pointer.y + cameraY, cameraX, cameraY);
+       	        console.log(`1 Closest Click: (${closestRedVertex.x}, ${closestRedVertex.y}) `);	
+
+	}
+
+
+			
+    	if(ZoomOut === 2){
+	    let worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+    	//let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
+		// closestRedVertex = this.findClosestRedVertexToClick(pointer.x + worldPoint.x, pointer.y + worldPoint.y, cameraX, cameraY);
+	closestRedVertex = this.findClosestRedVertexToClick(
+        worldPoint.x, 
+        worldPoint.y, 
+        this.cameras.main.scrollX, 
+        this.cameras.main.scrollY
+    );
+
+	        console.log(`2 Closest Click: (${closestRedVertex.x}, ${closestRedVertex.y}) `);	
+	
+	}
+
+
+			
+
+	//ENVIAR A SERVER QUE SE EJECUTE MOVIMIENTO EN TODOS
+	const player = players[socket.id];
+	let VelocidadValor = 0;
+	if(Velocidad===true){
+	VelocidadValor = 50;
+	}else if (Velocidad===false){
+		VelocidadValor = 500;
+	}
+	socket.emit('animationData', { start: { x: player.x, y: player.y }, end: { x: closestRedVertex.x, y: closestRedVertex.y }, speed: VelocidadValor });
+              
+	}
+	}
+	checkSecure = 0;
+} //END POINTER CLICK
 
 //FIND CLOSEST RED VERTEX  
 //FIND CLOSEST RED VERTEX            
@@ -340,9 +617,271 @@ updateRedVertices(x, y) {
 	const nuevoJugador = { name: name, puntos: puntos, color: color };
 	topplayers.push(nuevoJugador);
 }
+getTopPlayers() {
+	const sortedPlayers = topplayers.sort((a, b) => b.puntos - a.puntos);
+	const topPlayersx = sortedPlayers.slice(0, 5);
+	topPlayersx.forEach(topplayer => { });
+	return topPlayersx;
+}	
 
+//GAME OVER FUNCTION	
+gameOver(){
+	let pointsText = fixedText6.text;
+
+    // Encuentra el elemento HTML
+    let pointsElement = document.getElementById('points');
+
+    // Actualiza el texto del elemento con el puntaje
+    pointsElement.innerText = pointsText;
+
+	document.getElementById("retryBox").style.visibility = "visible";
+	var retryButton = document.getElementById("retryButton");
+	retryButton.onclick = function() {
+	console.log("Retry Game.");
+	location.reload();
+	};	
+}
 
 //DRAW GREEN CIRCLES!!!!!!
+
+
+
+drawGreenCircles(greenCirclesS) {
+console.log('GREEN CIRCLES DRAW');
+
+const initialRadius = 5;
+        const maxRadius = 10;
+        const duration = 1000; // Duración del tween en milisegundos
+
+
+
+    let index = 0;
+      for (const circle of greenCirclesS) {
+	          	console.log('CIRCLES Z', circle.z);
+
+        const circleGraphics = this.add.graphics(); // 'this' debería ser la escena de Phaser.js
+       // circleGraphics.fillStyle(0x00ff00, 0.5); // Color verde con opacidad del 50%      
+       //GREEN POINTS
+       if(index<15){
+
+
+
+	       
+                  /*   let graphics = this.add.graphics({ fillStyle: { color: 0x00ff00 } });
+                    let greenCircle = graphics.fillCircle(0, 0, 5);
+                    let greenCirclePhysics = this.physics.add.existing(greenCircle);
+                    greenCirclePhysics.body.setCircle(5);
+                    greenCirclePhysics.body.setCollideWorldBounds(true);
+                    greenCirclePhysics.x = circle.x;
+                    greenCirclePhysics.y = circle.y;
+                    greenCirclePhysics.z = circle.z;
+                greenCirclePhysics.type = 'green';
+*/
+
+	           //    const circleGraphics = this.add.graphics({ fillStyle: { color: 0x00ff00, alpha: 0.5 } });
+    const circleGraphics = this.add.graphics({ resolution: window.devicePixelRatio * 2 });
+circleGraphics.fillStyle(0x00ff00, 0.5); // Color y opacidad
+
+    // Dibujar el círculo inicialmente con radio 5
+    circleGraphics.fillCircle(0, 0, 5); // Radio 5 inicial
+
+    // Crear un contenedor para manejar la escala
+    let container = this.add.container(circle.x, circle.y, [circleGraphics]);
+
+    // Añadir física al contenedor (no a los gráficos directamente)
+    let greenCirclePhysics = this.physics.add.existing(container);
+    greenCirclePhysics.body.setCircle(5); // Radio inicial del cuerpo físico
+
+    // Hacer que colisione con los límites del mundo
+    greenCirclePhysics.body.setCollideWorldBounds(true);
+
+    // Asignar el 'type' personalizado para clasificar el círculo
+    greenCirclePhysics.type = 'green'; // En este caso, lo etiquetamos como un círculo "azul"
+                        greenCirclePhysics.z = circle.z;
+
+    // Añadir el círculo al grupo
+    this.greenCirclesGroup.add(greenCirclePhysics);
+  
+                  //  this.greenCirclesGroup.add(greenCirclePhysics);  
+
+
+
+ this.tweens.add({
+        targets: container, // Escalar el contenedor
+        scaleX: 1.5, // Escala en el eje X (para un radio de 10)
+        scaleY: 1.5, // Escala en el eje Y (para un radio de 10)
+        duration: 1000, // Cambia en 1 segundo
+        yoyo: true, // Vuelve al tamaño original (radio 5)
+        repeat: -1, // Repite indefinidamente
+        onUpdate: (tween) => {
+
+
+if (!container.active) {
+                tween.stop();  // Detén el tween
+                tween.remove(); // Elimina el tween
+            } else {
+
+            // Obtener el valor de la escala actual (suponiendo que escala 1 = radio 5, y escala 2 = radio 10)
+            let scale = container.scaleX;
+            let newRadius = 5 * scale; // Ajustar el nuevo radio según la escala
+            greenCirclePhysics.body.setCircle(newRadius); // Actualizar el radio físico
+        }
+
+}
+
+    });
+
+
+
+
+        //BLUE SPEED
+        }else{
+
+
+
+
+        const circleGraphics = this.add.graphics({ fillStyle: { color: 0x0000ff, alpha: 0.5 } });
+    
+    // Dibujar el círculo inicialmente con radio 5
+    circleGraphics.fillCircle(0, 0, 2); // Radio 5 inicial
+
+    // Crear un contenedor para manejar la escala
+    let container = this.add.container(circle.x, circle.y, [circleGraphics]);
+
+    // Añadir física al contenedor (no a los gráficos directamente)
+    let greenCirclePhysics = this.physics.add.existing(container);
+    greenCirclePhysics.body.setCircle(2); // Radio inicial del cuerpo físico
+
+    // Hacer que colisione con los límites del mundo
+    greenCirclePhysics.body.setCollideWorldBounds(true);
+
+    // Asignar el 'type' personalizado para clasificar el círculo
+    greenCirclePhysics.type = 'blue'; // En este caso, lo etiquetamos como un círculo "azul"
+                        greenCirclePhysics.z = circle.z;
+
+    // Añadir el círculo al grupo
+    this.greenCirclesGroup.add(greenCirclePhysics);
+
+    // Crear el tween para cambiar el tamaño del círculo usando escalado
+   
+
+
+
+
+
+
+ this.tweens.add({
+        targets: container, // Escalar el contenedor
+        scaleX: 2, // Escala en el eje X (para un radio de 10)
+        scaleY: 2, // Escala en el eje Y (para un radio de 10)
+        duration: 1000, // Cambia en 1 segundo
+        yoyo: true, // Vuelve al tamaño original (radio 5)
+        repeat: -1, // Repite indefinidamente
+        onUpdate: (tween) => {
+
+
+if (!container.active) {
+                tween.stop();  // Detén el tween
+                tween.remove(); // Elimina el tween
+            } else {
+
+            // Obtener el valor de la escala actual (suponiendo que escala 1 = radio 5, y escala 2 = radio 10)
+            let scale = container.scaleX;
+            let newRadius = 5 * scale; // Ajustar el nuevo radio según la escala
+            greenCirclePhysics.body.setCircle(newRadius); // Actualizar el radio físico
+        }
+
+}
+
+    });
+
+
+/*
+
+this.tweens.add({
+        targets: greenCirclesGroup.getChildren(),  // Obtener todos los círculos del grupo
+        scaleX: 2,  // Cambiar la escala en el eje X
+        scaleY: 2,  // Cambiar la escala en el eje Y
+        duration: 1000,
+        yoyo: true,  // Hacer que vuelva al tamaño original
+        repeat: -1  // Repetir indefinidamente
+    });
+
+*/
+
+/////////////__________________
+
+
+   }
+        index++;
+        }
+} //END DRAW GREEN CIRCLES!!!!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+///ACTIVAR VELOCIDAD TEXTO
+activarVelocidad() {
+	fixedText7.visible = true;
+	clearInterval(intervalo);
+    	Velocidad = true;
+    	const newVel = { velocidad: Velocidad };
+    	console.log('Velocidad activada');
+    	fixedText7.setText(`X2 SPEED - 5 s`);
+    	segundosRestantes = 5;
+    	intervalo = setInterval(function() {
+        segundosRestantes--;
+        if (segundosRestantes > 0) {
+            fixedText7.setText(`X2 SPEED - ${segundosRestantes} s`);
+        } else {
+            clearInterval(intervalo);
+            Velocidad = false;
+            console.log('Velocidad desactivada');
+            const newVel = { velocidad: Velocidad };
+            //socket.emit('updateVelocidadServer', newVel);
+            fixedText7.setText(``);
+        } }, 1000); // Actualizar cada segundo
+}
+
+///TEXTO VELOCIDAD EN EL MEDIO PANTALLA
+llamarTextoSpeed(scene) {
+        const width = scene.scale.width;
+        const height = scene.scale.height;
+        const text = scene.add.text(width / 2, height / 2, '+speed!', {
+            fontSize: '40px',
+            fill: '#0000ff', resolution: dpi * 2, fontFamily: 'Roboto'
+        }).setOrigin(0.5, 0.5);
+        text.setScrollFactor(0);
+	scene.tweens.add({ targets: text, scaleX: 2, scaleY: 2, duration: 500, ease: 'Power2', yoyo: scene, 
+            onComplete: () => {
+                scene.time.addEvent({
+                    delay: 200,
+                    callback: () => { text.destroy();  }
+                }); } });
+}
+
+textOnDestroy(scene, x, y, texto, size, color) {
+            const text = scene.add.text(x, y, texto, {
+                    fontSize: size,
+                    fill: color, resolution: dpi * 2 , fontFamily: 'Roboto'
+            });
+            	text.setOrigin(0.5, 0.5); // Establece el origen del texto en su centro
+    		text.setPosition(x, y); // Reposiciona el texto
+            	scene.time.addEvent({
+                    delay: 500,
+                    callback: () => {
+                        text.destroy();
+                    } });
+}
 
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
@@ -366,13 +905,8 @@ class UIScene extends Phaser.Scene {
         this.cameras.main.setZoom(zoomLevel);
 	let zoomFactor = this.cameras.main.zoom; 
 	let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
-
-//	const textResolution = dpi > 1 ? dpi * 2 : dpi;
 	 
-		 
-
-
-		 
+		
         } //END CREATE UISCENE
             
         update() {}
@@ -414,17 +948,13 @@ class UIScene extends Phaser.Scene {
 antialias: true,
 		resolution: window.devicePixelRatio * 2
 
-		/* render: {
-        pixelArt: false,
-        antialias: true,
-    },
 
-
-*/
         };
 
         const game = new Phaser.Game(config);
 	game.scene.start('GameScene');
+
+
 
 	
 }  //END FUNCTION START GAME!!!!
