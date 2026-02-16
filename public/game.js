@@ -186,24 +186,6 @@ moveCameraToCenter() {
             onComplete: () => { } });
 }   
     
-destroyPlayer(suID) {
-        if (this.id === socket.id) {
-            this.stopCameraFollow();
-        }
-        // Eliminar el círculo del jugador
-        if (this.circle) {
-            this.circle.destroy();
-        }
-        // Eliminar el texto del jugador
-        if (this.text) {
-            this.text.destroy();
-        }
-        // Eliminar el jugador del grupo de círculos verdes si es necesario
-        if (this.greenCirclesGroup) {
-            this.greenCirclesGroup.remove(this.circle);
-        }
-        delete players[suID]; 
-} 
 
 } //END PLAYER CLASS //END PLAYER CLASS //END PLAYER CLASS //END PLAYER CLASS //END PLAYER CLASS 
 
@@ -219,53 +201,7 @@ class GameScene extends Phaser.Scene {
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene 
         create() {		
 
-	//RECIBIR UPDATE POINTS AND SIZE Of PLAYER
-	socket.on('updatePuntos', function(myID, puntos) {
-	console.log('Recibido upDate Puntos:', myID, puntos);
-	const sizeCalc = (0.01 * puntos) + 0.2;		
-	players[myID].text.setText(players[myID].name + ' (' + puntos + ')');
-	players[myID].circle.setScale(sizeCalc); 
-	players[myID].puntos = puntos;
-	if(socket.id===myID)
-	fixedText6.setText('Points: '+puntos);
-	});	
-	
-	//RECIBIR UPDATE TOP PLAYERS
-	socket.on('updateTopPlayers', () =>  {
-	topplayers = [];
-	for (const playerId in players) {
-	const player = players[playerId];
-	console.log(`ID: ${playerId}, Nombre: ${player.name}, Puntos: ${player.puntos}`);
-	this.addPlayer(players[playerId].name, players[playerId].puntos, players[playerId].color);
-	}
-	const topPlayers = this.getTopPlayers();
-	fixedText1.setText(topPlayers.length >= 1 ? `#1 ${topPlayers[0].name}: ${topPlayers[0].puntos}` : '');
-	if (topPlayers[0] && topPlayers[0].color) {
-	fixedText1.setFill(topPlayers[0].color); }
-	fixedText2.setText(topPlayers.length >= 2 ? `#2 ${topPlayers[1].name}: ${topPlayers[1].puntos}` : '');
-	if (topPlayers[1] && topPlayers[1].color) {
-	fixedText2.setFill(topPlayers[1].color); }
-	fixedText3.setText(topPlayers.length >= 3 ? `#3 ${topPlayers[2].name}: ${topPlayers[2].puntos}` : '');
-	if (topPlayers[2] && topPlayers[2].color) {
-	fixedText3.setFill(topPlayers[2].color); }
-	fixedText4.setText(topPlayers.length >= 4 ? `#4 ${topPlayers[3].name}: ${topPlayers[3].puntos}` : '');
-	if (topPlayers[3] && topPlayers[3].color) {
-	fixedText4.setFill(topPlayers[3].color); }
-	fixedText5.setText(topPlayers.length >= 5 ? `#5 ${topPlayers[4].name}: ${topPlayers[4].puntos}` : '');
-	if (topPlayers[4] && topPlayers[4].color) {
-	fixedText5.setFill(topPlayers[4].color); }
-	});			 	
-
-	//BORRA TODOS CIRCULOS VERDES PARA VOLVER A GENERAR (DESDE SERVER ACCIONADO)
-	socket.on('borrarTodosGreen', () => {
-	console.log('BORRAR GREEN CIRCLES.');
-	this.greenCirclesGroup.getChildren().forEach(circle => {
-        // Verificar si el tipo no es 'player'
-        if (circle.type !== 'player') {
-            circle.destroy();
-        } });   	    
-	});
-   
+	 	
 //CAM ZOOM INITIALIZATION
 const zoomLevel = isMobile ? 8 / dpi : 1 / dpi; // Menos zoom en PC
 this.cameras.main.setZoom(zoomLevel);
@@ -292,21 +228,6 @@ hexagonGraphics = this.add.graphics({
 redCirclesGroup = this.add.group();
 hexagonGroup = this.add.group();
 
-/*		
-for (let y = 0; y < hexagonMap.length; y++) {
-    for (let x = 0; x < hexagonMap[y].length; x++) {
-        let hexX = x * hexagonWidth * 0.75;
-        let hexY = y * hexagonHeight + (x % 2 === 0 ? 0 : hexagonHeight / 2);
-        // Opcional: Usa la dirección del hexágono si es necesario
-        let direction = hexagonMap[y][x].direction;
-        //console.log(`Hexágono en (${x}, ${y}) tiene dirección: ${direction}`);
-        this.drawHexagon2(hexX, hexY, hexagonSize);
-        hexagons.push({ x: hexX, y: hexY });
-        vertices.push(...this.getHexVertices(hexX, hexY));
-        hexagonGroup2.add(hexagonGraphics2); // Añadir el gráfico del hexágono al grupo
-    }
-}  
-	*/	
 // Crear el mapa hexagonal
 for (let y = 0; y < hexagonMap.length; y++) {
     for (let x = 0; x < hexagonMap[y].length; x++) {
@@ -481,189 +402,8 @@ getTopPlayers() {
 	return topPlayersx;
 }	
 
-//GAME OVER FUNCTION	
-gameOver(){
-	let pointsText = fixedText6.text;
-
-    // Encuentra el elemento HTML
-    let pointsElement = document.getElementById('points');
-
-    // Actualiza el texto del elemento con el puntaje
-    pointsElement.innerText = pointsText;
-
-	document.getElementById("retryBox").style.visibility = "visible";
-	var retryButton = document.getElementById("retryButton");
-	retryButton.onclick = function() {
-	console.log("Retry Game.");
-	location.reload();
-	};	
-}
 
 //DRAW GREEN CIRCLES!!!!!!
-
-
-
-drawGreenCircles(greenCirclesS) {
-console.log('GREEN CIRCLES DRAW');
-
-const initialRadius = 5;
-        const maxRadius = 10;
-        const duration = 1000; // Duración del tween en milisegundos
-
-
-
-    let index = 0;
-      for (const circle of greenCirclesS) {
-	          	console.log('CIRCLES Z', circle.z);
-
-        const circleGraphics = this.add.graphics(); // 'this' debería ser la escena de Phaser.js
-       // circleGraphics.fillStyle(0x00ff00, 0.5); // Color verde con opacidad del 50%      
-       //GREEN POINTS
-       if(index<15){
-
-
-
-	       
-                  /*   let graphics = this.add.graphics({ fillStyle: { color: 0x00ff00 } });
-                    let greenCircle = graphics.fillCircle(0, 0, 5);
-                    let greenCirclePhysics = this.physics.add.existing(greenCircle);
-                    greenCirclePhysics.body.setCircle(5);
-                    greenCirclePhysics.body.setCollideWorldBounds(true);
-                    greenCirclePhysics.x = circle.x;
-                    greenCirclePhysics.y = circle.y;
-                    greenCirclePhysics.z = circle.z;
-                greenCirclePhysics.type = 'green';
-*/
-
-	           //    const circleGraphics = this.add.graphics({ fillStyle: { color: 0x00ff00, alpha: 0.5 } });
-    const circleGraphics = this.add.graphics({ resolution: window.devicePixelRatio * 2 });
-circleGraphics.fillStyle(0x00ff00, 0.5); // Color y opacidad
-
-    // Dibujar el círculo inicialmente con radio 5
-    circleGraphics.fillCircle(0, 0, 5); // Radio 5 inicial
-
-    // Crear un contenedor para manejar la escala
-    let container = this.add.container(circle.x, circle.y, [circleGraphics]);
-
-    // Añadir física al contenedor (no a los gráficos directamente)
-    let greenCirclePhysics = this.physics.add.existing(container);
-    greenCirclePhysics.body.setCircle(5); // Radio inicial del cuerpo físico
-
-    // Hacer que colisione con los límites del mundo
-    greenCirclePhysics.body.setCollideWorldBounds(true);
-
-    // Asignar el 'type' personalizado para clasificar el círculo
-    greenCirclePhysics.type = 'green'; // En este caso, lo etiquetamos como un círculo "azul"
-                        greenCirclePhysics.z = circle.z;
-
-    // Añadir el círculo al grupo
-    this.greenCirclesGroup.add(greenCirclePhysics);
-  
-                  //  this.greenCirclesGroup.add(greenCirclePhysics);  
-
-
-
- this.tweens.add({
-        targets: container, // Escalar el contenedor
-        scaleX: 1.5, // Escala en el eje X (para un radio de 10)
-        scaleY: 1.5, // Escala en el eje Y (para un radio de 10)
-        duration: 1000, // Cambia en 1 segundo
-        yoyo: true, // Vuelve al tamaño original (radio 5)
-        repeat: -1, // Repite indefinidamente
-        onUpdate: (tween) => {
-
-
-if (!container.active) {
-                tween.stop();  // Detén el tween
-                tween.remove(); // Elimina el tween
-            } else {
-
-            // Obtener el valor de la escala actual (suponiendo que escala 1 = radio 5, y escala 2 = radio 10)
-            let scale = container.scaleX;
-            let newRadius = 5 * scale; // Ajustar el nuevo radio según la escala
-            greenCirclePhysics.body.setCircle(newRadius); // Actualizar el radio físico
-        }
-
-}
-
-    });
-
-
-
-
-        //BLUE SPEED
-        }else{
-
-
-
-
-        const circleGraphics = this.add.graphics({ fillStyle: { color: 0x0000ff, alpha: 0.5 } });
-    
-    // Dibujar el círculo inicialmente con radio 5
-    circleGraphics.fillCircle(0, 0, 2); // Radio 5 inicial
-
-    // Crear un contenedor para manejar la escala
-    let container = this.add.container(circle.x, circle.y, [circleGraphics]);
-
-    // Añadir física al contenedor (no a los gráficos directamente)
-    let greenCirclePhysics = this.physics.add.existing(container);
-    greenCirclePhysics.body.setCircle(2); // Radio inicial del cuerpo físico
-
-    // Hacer que colisione con los límites del mundo
-    greenCirclePhysics.body.setCollideWorldBounds(true);
-
-    // Asignar el 'type' personalizado para clasificar el círculo
-    greenCirclePhysics.type = 'blue'; // En este caso, lo etiquetamos como un círculo "azul"
-                        greenCirclePhysics.z = circle.z;
-
-    // Añadir el círculo al grupo
-    this.greenCirclesGroup.add(greenCirclePhysics);
-
-    // Crear el tween para cambiar el tamaño del círculo usando escalado
-   
-
-
-
-
-
-
- this.tweens.add({
-        targets: container, // Escalar el contenedor
-        scaleX: 2, // Escala en el eje X (para un radio de 10)
-        scaleY: 2, // Escala en el eje Y (para un radio de 10)
-        duration: 1000, // Cambia en 1 segundo
-        yoyo: true, // Vuelve al tamaño original (radio 5)
-        repeat: -1, // Repite indefinidamente
-        onUpdate: (tween) => {
-
-
-if (!container.active) {
-                tween.stop();  // Detén el tween
-                tween.remove(); // Elimina el tween
-            } else {
-
-            // Obtener el valor de la escala actual (suponiendo que escala 1 = radio 5, y escala 2 = radio 10)
-            let scale = container.scaleX;
-            let newRadius = 5 * scale; // Ajustar el nuevo radio según la escala
-            greenCirclePhysics.body.setCircle(newRadius); // Actualizar el radio físico
-        }
-
-}
-
-    });
-
-
-
-/////////////__________________
-
-
-   }
-        index++;
-        }
-} //END DRAW GREEN CIRCLES!!!!!!
-
-
-
 
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
