@@ -66,16 +66,7 @@ class GameScene extends Phaser.Scene {
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene 
         create() {		
 
-	//RECIBIR UPDATE POINTS AND SIZE Of PLAYER
-	socket.on('updatePuntos', function(myID, puntos) {
-	console.log('Recibido upDate Puntos:', myID, puntos);
-	const sizeCalc = (0.01 * puntos) + 0.2;		
-	players[myID].text.setText(players[myID].name + ' (' + puntos + ')');
-	players[myID].circle.setScale(sizeCalc); 
-	players[myID].puntos = puntos;
-	if(socket.id===myID)
-	fixedText6.setText('Points: '+puntos);
-	});	
+
 	
 	
    
