@@ -135,9 +135,7 @@ game.scene.bringToTop('UIScene');
 }
 //END CREATE GAME SCENE END CREATE
 //END CREATE GAME SCENE END CREATE
-//END CREATE GAME SCENE END CREATE
-//END CREATE GAME SCENE END CREATE
-//END CREATE GAME SCENE END CREATE
+
 
 update() { }
 
@@ -179,32 +177,10 @@ onPointerDown(pointer) {
         //console.log(`ClickW: (${pointer.worldX + cameraX}, ${pointer.worldY + cameraY}) `);	
 	let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
 	console.log(`World coordinates: (${worldPoint.x}, ${worldPoint.y})`);
-	
-	let closestRedVertex = this.findClosestRedVertexToClick(pointer.x + cameraX, pointer.y + cameraY, cameraX, cameraY);
-
-	if(ZoomOut === 1){
-		 closestRedVertex = this.findClosestRedVertexToClick(pointer.x + cameraX, pointer.y + cameraY, cameraX, cameraY);
-       	        console.log(`1 Closest Click: (${closestRedVertex.x}, ${closestRedVertex.y}) `);	
-
-	}
-
-
-			
-
-
-
-			
-
 	//ENVIAR A SERVER QUE SE EJECUTE MOVIMIENTO EN TODOS
 	const player = players[socket.id];
 	let VelocidadValor = 0;
-	if(Velocidad===true){
-	VelocidadValor = 50;
-	}else if (Velocidad===false){
-		VelocidadValor = 500;
-	}
-	socket.emit('animationData', { start: { x: player.x, y: player.y }, end: { x: closestRedVertex.x, y: closestRedVertex.y }, speed: VelocidadValor });
-              
+	            
 	}
 	}
 	checkSecure = 0;
