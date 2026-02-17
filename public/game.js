@@ -256,74 +256,10 @@ findClosestRedVertexToClick(x, y) {
                 }
             }); return closestVertex;
 }
-                                     
-//CLEAR RED VERTEX                                                                         
- clearRedVertices() {
-	redCirclesGroup.clear(true, true);  // Borra todos los elementos del grupo redCirclesGroup
-    	redVertices = []; 
-}
+
 		
-//UPDATE RED VERTEX POINTS        
-updateRedVertices(x, y) {
-	this.clearRedVertices.call(this);  
-    	const verticesInRadius = this.getVerticesInRadius(x, y, 60); // Radio de 60 píxeles
-    	verticesInRadius.forEach(vertex => { 
-    	redVertices.push({ x: vertex.x, y: vertex.y });
-    	//console.log(`redVertex: (${vertex.x}, ${vertex.y}) `);	
-   	const graphics = this.add.graphics();
-    	graphics.fillStyle(0xff0000, 1); // Color rojo, opacidad 1
-    	graphics.fillCircle(vertex.x, vertex.y, 4); // Dibuja un círculo en la posición (vertex.x, vertex.y) con radio 5
-	redCirclesGroup.add(graphics);                        
-    });         
-}       
+  
 //END UPDATE RED VERTEX POINTS   
-		
-///TOP PLATERS SYSTEM
- addPlayer(name, puntos, color) {
-	const nuevoJugador = { name: name, puntos: puntos, color: color };
-	topplayers.push(nuevoJugador);
-}
-getTopPlayers() {
-	const sortedPlayers = topplayers.sort((a, b) => b.puntos - a.puntos);
-	const topPlayersx = sortedPlayers.slice(0, 5);
-	topPlayersx.forEach(topplayer => { });
-	return topPlayersx;
-}	
-
-//GAME OVER FUNCTION	
-gameOver(){
-	let pointsText = fixedText6.text;
-
-    // Encuentra el elemento HTML
-    let pointsElement = document.getElementById('points');
-
-    // Actualiza el texto del elemento con el puntaje
-    pointsElement.innerText = pointsText;
-
-	document.getElementById("retryBox").style.visibility = "visible";
-	var retryButton = document.getElementById("retryButton");
-	retryButton.onclick = function() {
-	console.log("Retry Game.");
-	location.reload();
-	};	
-}
-
-//DRAW GREEN CIRCLES!!!!!!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -354,6 +290,42 @@ class UIScene extends Phaser.Scene {
 	 
 		 
 
+
+//CHECKBOXES FOR ZOOM AND CAMERA		 
+let lineWidth = 2; 	
+let boxSize = 20;
+let boxX = worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10;
+let boxY = worldPoint.y + (this.cameras.main.height / 2) / zoomFactor - boxSize*2 - 20;
+// Añadir texto fijo en la pantalla y centrarlo verticalmente con el checkbox
+let textYOffset = boxSize / 2;
+let staticText = this.add.text(boxX + boxSize + 10, boxY + textYOffset, 'Zoom', { fontSize: '16px', fill: '#ffffff' , resolution: dpi * 2 , fontFamily: 'Roboto'   });
+staticText.setShadow(2, 2, 'blue', 5);
+staticText.setOrigin(0, 0.5); // Ajuste vertical para centrar con el checkbox
+staticText.setScrollFactor(0); // Esto fija el texto para que no se desplace con la cámara
+// Crear el gráfico del checkbox
+let box = this.add.graphics();
+// Dibujar el checkbox
+box.fillStyle(0x00ff00); // Color verde
+box.fillRect(boxX, boxY, boxSize, boxSize);
+// Estado inicial del checkbox
+let isBoxChecked = true;
+// Función para dibujar o borrar la "X"
+let drawBoxCheck = (isBoxChecked) => {
+    box.clear();
+    box.fillStyle(0x00ff00); // Color verde
+    box.fillRect(boxX, boxY, boxSize, boxSize);
+    if (isBoxChecked) {
+        box.lineStyle(lineWidth, 0x000000); // Color negro para la "X"
+        box.beginPath();
+        box.moveTo(boxX, boxY);
+        box.lineTo(boxX + boxSize, boxY + boxSize);
+        box.moveTo(boxX + boxSize, boxY);
+        box.lineTo(boxX, boxY + boxSize);
+        box.strokePath();
+    }
+};
+// Dibujar el estado inicial del checkbox
+drawBoxCheck(isBoxChecked);
 // Hacer que el checkbox sea interactivo
 let hitAreaBox = new Phaser.Geom.Rectangle(boxX, boxY, boxSize, boxSize);
 box.setInteractive(hitAreaBox, Phaser.Geom.Rectangle.Contains);
