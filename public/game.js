@@ -77,41 +77,7 @@ class GameScene extends Phaser.Scene {
 	fixedText6.setText('Points: '+puntos);
 	});	
 	
-	//RECIBIR UPDATE TOP PLAYERS
-	socket.on('updateTopPlayers', () =>  {
-	topplayers = [];
-	for (const playerId in players) {
-	const player = players[playerId];
-	console.log(`ID: ${playerId}, Nombre: ${player.name}, Puntos: ${player.puntos}`);
-	this.addPlayer(players[playerId].name, players[playerId].puntos, players[playerId].color);
-	}
-	const topPlayers = this.getTopPlayers();
-	fixedText1.setText(topPlayers.length >= 1 ? `#1 ${topPlayers[0].name}: ${topPlayers[0].puntos}` : '');
-	if (topPlayers[0] && topPlayers[0].color) {
-	fixedText1.setFill(topPlayers[0].color); }
-	fixedText2.setText(topPlayers.length >= 2 ? `#2 ${topPlayers[1].name}: ${topPlayers[1].puntos}` : '');
-	if (topPlayers[1] && topPlayers[1].color) {
-	fixedText2.setFill(topPlayers[1].color); }
-	fixedText3.setText(topPlayers.length >= 3 ? `#3 ${topPlayers[2].name}: ${topPlayers[2].puntos}` : '');
-	if (topPlayers[2] && topPlayers[2].color) {
-	fixedText3.setFill(topPlayers[2].color); }
-	fixedText4.setText(topPlayers.length >= 4 ? `#4 ${topPlayers[3].name}: ${topPlayers[3].puntos}` : '');
-	if (topPlayers[3] && topPlayers[3].color) {
-	fixedText4.setFill(topPlayers[3].color); }
-	fixedText5.setText(topPlayers.length >= 5 ? `#5 ${topPlayers[4].name}: ${topPlayers[4].puntos}` : '');
-	if (topPlayers[4] && topPlayers[4].color) {
-	fixedText5.setFill(topPlayers[4].color); }
-	});			 	
-
-	//BORRA TODOS CIRCULOS VERDES PARA VOLVER A GENERAR (DESDE SERVER ACCIONADO)
-	socket.on('borrarTodosGreen', () => {
-	console.log('BORRAR GREEN CIRCLES.');
-	this.greenCirclesGroup.getChildren().forEach(circle => {
-        // Verificar si el tipo no es 'player'
-        if (circle.type !== 'player') {
-            circle.destroy();
-        } });   	    
-	});
+	
    
 //CAM ZOOM INITIALIZATION
 const zoomLevel = isMobile ? 8 / dpi : 1 / dpi; // Menos zoom en PC
@@ -179,48 +145,7 @@ this.updateRedVertices.call(this, randomVertex.x, randomVertex.y);
 //console.log("COORDS", randomVertex.x,randomVertex.y);
 this.input.on('pointerdown', this.onPointerDown, this);
 
-socket.emit('LlamargreenCirclesS');
 
-//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
-//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
-//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
-//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
-//UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS //UPDATE PLAYERS!!!!!! // AND CREATE PLAYERS
-socket.on('updatePlayers', updatedPlayers => {
-console.log('SOCKET UPDATE PLAYERS');	
-for (const playerId in updatedPlayers) {
-const playerData = updatedPlayers[playerId];
-console.log("Jugador:", playerData);
-// Si el jugador ya existe, actualiza su posición
-if (players[playerData.id]) {
-} else {
-// Si el jugador no existe, créalo y añádelo al objeto players
-const playerKey = `player_${playerData.id}`; // Llave única para cada jugador
-if (!this.textures.exists(playerKey)) {
-const svgBlob = new Blob([playerData.skin], { type: 'image/svg+xml;charset=utf-8' });
-const svgUrl = URL.createObjectURL(svgBlob);
-this.load.image(playerData.id, svgUrl);
-this.load.once('complete', () => {
-//INVALIDAR IMAGEN DESPEUS DE CARGARLA
-URL.revokeObjectURL(svgUrl);
-const player = new Player(this, playerData.id, playerData.name, playerData.x, playerData.y, 10, playerData.skin, this.greenCirclesGroup, playerData.puntos,playerData.color);
-players[playerData.id] = player;
-console.log('SE CREA PLAYER', players[playerData.id]);
-socket.emit('crearTopPlayers');
-
-if(socket.id===playerData.id){
-console.log("Ejecutar Top Players");
-//socket.emit('crearTopPlayers');
-}
-});
-this.load.start();
-} else {
-const player = new Player(this, playerData.id, playerData.name, playerData.x, playerData.y, 10, playerData.skin, this.greenCirclesGroup, playerData.puntos,playerData.color);
-players[playerData.id] = player;
-}
-}
-}
-});
 
 ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - 
 ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - ///ANIMATE PLAYER MOVE // MOVE PLAYER FROM SERVER - 
