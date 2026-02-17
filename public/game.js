@@ -75,7 +75,6 @@ let zoomFactor = this.cameras.main.zoom;
 let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
 
 
-this.greenCirclesGroup = this.physics.add.group();
 
 //HEXAGONAL MAP INITIALIZATION		
 //hexagonGraphics2 = this.add.graphics({ lineStyle: { width: 6, color: 0x0077ff, alpha: 0.2 } });
@@ -127,10 +126,6 @@ for (let y = 0; y < hexagonMap.length; y++) {
 const randomHex = hexagons[Phaser.Math.Between(0, hexagons.length - 1)];
 const randomVertex = this.getHexVertices(randomHex.x, randomHex.y)[Phaser.Math.Between(0, 5)];
 player = this.add.circle(randomVertex.x, randomVertex.y, 0, 0xffffff);
-
-socket.emit('newPlayer', { name: playerName, x: randomVertex.x, y: randomVertex.y, skin: skinCode });       
-//console.log("COORDS", randomVertex.x,randomVertex.y);
-
 
 
 game.scene.start('UIScene');
@@ -195,20 +190,7 @@ onPointerDown(pointer) {
 
 
 			
-    	if(ZoomOut === 2){
-	    let worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
-    	//let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
-		// closestRedVertex = this.findClosestRedVertexToClick(pointer.x + worldPoint.x, pointer.y + worldPoint.y, cameraX, cameraY);
-	closestRedVertex = this.findClosestRedVertexToClick(
-        worldPoint.x, 
-        worldPoint.y, 
-        this.cameras.main.scrollX, 
-        this.cameras.main.scrollY
-    );
 
-	        console.log(`2 Closest Click: (${closestRedVertex.x}, ${closestRedVertex.y}) `);	
-	
-	}
 
 
 			
