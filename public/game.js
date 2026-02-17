@@ -552,76 +552,8 @@ let isChecked = true;
 
 
 	 		
-window.addEventListener('resize', () => resizeTexts(this));
-
-function resizeTexts(scene) {
-    console.log(`RESIZE!!!!`);
-
-    const worldPoint = scene.cameras.main.midPoint; // Asumimos que este es el punto central que estás usando
-    const zoomFactor = scene.cameras.main.zoom;
-
-    fixedText1.setPosition( 	
-        worldPoint.x - (scene.cameras.main.width / 2) / zoomFactor + 10, 
-        worldPoint.y - (scene.cameras.main.height / 2) / zoomFactor + 10
-    ); 
-
-    fixedText2.setPosition( 	
-        worldPoint.x - (scene.cameras.main.width / 2) / zoomFactor + 10, 
-        worldPoint.y - (scene.cameras.main.height / 2) / zoomFactor + 30
-    ); 
-
-    fixedText3.setPosition( 	
-        worldPoint.x - (scene.cameras.main.width / 2) / zoomFactor + 10, 
-        worldPoint.y - (scene.cameras.main.height / 2) / zoomFactor + 50
-    ); 
-
-    fixedText4.setPosition( 	
-        worldPoint.x - (scene.cameras.main.width / 2) / zoomFactor + 10, 
-        worldPoint.y - (scene.cameras.main.height / 2) / zoomFactor + 70
-    ); 
-
-    fixedText5.setPosition( 	
-        worldPoint.x - (scene.cameras.main.width / 2) / zoomFactor + 10, 
-        worldPoint.y - (scene.cameras.main.height / 2) / zoomFactor + 90
-    ); 
-
-    fixedText6.setPosition(
-        worldPoint.x + (scene.cameras.main.width / 2) / zoomFactor - fixedText6.width - 20, 
-        worldPoint.y - (scene.cameras.main.height / 2) / zoomFactor + 10
-    );
-
-    fixedText7.setPosition(
-        worldPoint.x + (scene.cameras.main.width / 2) / zoomFactor - fixedText7.width - 20, 
-        worldPoint.y - (scene.cameras.main.height / 2) / zoomFactor + 30
-    );
-    	//fixedText7.setText(`X2 SPEED - 5 s`);
-    	//fixedText7.setText(`              `);
 
 
-
-boxSize = 20;
-boxX = worldPoint.x - (scene.cameras.main.width / 2) / zoomFactor + 10;
-boxY = worldPoint.y + (scene.cameras.main.height / 2) / zoomFactor - boxSize*2 - 20;
-// Añadir texto fijo en la pantalla y centrarlo verticalmente con el checkbox
-textYOffset = boxSize / 2;	
-staticText.setPosition(boxX + boxSize + 10, boxY + textYOffset);
-drawBoxCheck(isBoxChecked);
-
-
-
-checkboxSize = 20;
-checkboxX =   worldPoint.x - (scene.cameras.main.width / 2) / zoomFactor + 10 ;
-checkboxY = worldPoint.y + (scene.cameras.main.height / 2) / zoomFactor - checkboxSize - 10;
-// Añadir texto fijo en la pantalla y centrarlo verticalmente con el checkbox
-textOffsetY = checkboxSize / 2;
-fixedText.setPosition(checkboxX + checkboxSize + 10, checkboxY + textOffsetY);
-drawCheck(isChecked);
-
-	
-
-
-	
-}
 
 
 		 
@@ -677,18 +609,6 @@ antialias: true,
 
         const game = new Phaser.Game(config);
 	game.scene.start('GameScene');
-
-	// Listener para el redimensionamiento de la ventana
-/*window.addEventListener('resize', () => {
-    const newWidth = window.innerWidth * dpi;
-    const newHeight = window.innerHeight * dpi;
-    game.scale.resize(newWidth, newHeight);
-    game.scene.scenes.forEach(scene => {
-        if (scene.cameras.main) {
-            scene.cameras.main.setViewport(0, 0, newWidth, newHeight);
-        }
-    });
-});*/
 
 	
 }  //END FUNCTION START GAME!!!!
