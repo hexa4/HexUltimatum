@@ -30,14 +30,12 @@ function startGame(playerName) {
         let vertices = [];
         let redVertices = [];
 	let ZoomOut = 1;
-	let greenCirclesGroup;	
 	let noMover = false;
 	let checkSecure = 0;
 	let Cam = 1;
 	let fixedText1, fixedText2, fixedText3, fixedText4, fixedText5, fixedText6, fixedText7;
 	const players = {}; // Usaremos un objeto para almacenar los jugadores
 	let topplayers = [];	
-        let redCirclesGroup;
         let hexagonGroup,hexagonGroup2;
         let playerNameCircle;
 	let checkbox, fixedText, hitArea;
@@ -93,7 +91,6 @@ hexagonGraphics = this.add.graphics({
     antialias: true // Intenta añadir esta propiedad si el renderizador lo permite
 });
 		
-redCirclesGroup = this.add.group();
 hexagonGroup = this.add.group();
 
 /*		
@@ -132,9 +129,7 @@ const randomVertex = this.getHexVertices(randomHex.x, randomHex.y)[Phaser.Math.B
 player = this.add.circle(randomVertex.x, randomVertex.y, 0, 0xffffff);
 
 socket.emit('newPlayer', { name: playerName, x: randomVertex.x, y: randomVertex.y, skin: skinCode });       
-this.updateRedVertices.call(this, randomVertex.x, randomVertex.y); 
 //console.log("COORDS", randomVertex.x,randomVertex.y);
-this.input.on('pointerdown', this.onPointerDown, this);
 
 
 
