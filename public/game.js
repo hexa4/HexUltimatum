@@ -251,18 +251,7 @@ let toggleBox = () => {
     	ZoomOut = 1;
 	let playerLocal = players[socket.id];
     	if (isBoxChecked) {
-        //this.cameras.main.setZoom(8 / dpi);
-		//this.scene.get('GameScene').cameras.main.setZoom(8 / dpi);
-        //let zoomFactor = this.cameras.main.zoom; 
-		const zoomLevel = isMobile ? 8 / dpi : 1 / dpi; // Menos zoom en PC
-                this.scene.get('GameScene').cameras.main.setZoom(zoomLevel);
-
-		    	ZoomOut = 1;
-
-		//playerLocal.fontSizePlayer(12);
-		Object.values(players).forEach(player => {
-    		player.fontSizePlayer(12); // Cambia el tamaño de la fuente a 24px para cada jugador
-		});
+     
     	} else {
 	
 		
@@ -314,37 +303,6 @@ let isChecked = true;
         // Hacer que el checkbox sea interactivo
         let hitArea = new Phaser.Geom.Rectangle(checkboxX, checkboxY, checkboxSize, checkboxSize);
         checkbox.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
-        let toggleCheckbox = () => {
-            	isChecked = !isChecked;
-            	drawCheck(isChecked);
-            	checkSecure = 1;
-    		let playerLocal = players[socket.id];
-            if (isChecked) {
-                Cam = 1;
-                console.log('Checkbox checked, Cam =', Cam);
-                playerLocal.startCameraFollow();
-
-            } else {
-                Cam = 2;
-                console.log('Checkbox unchecked, Cam =', Cam);
-                playerLocal.stopCameraFollow();
-            }
-        };
-        checkbox.on('pointerdown', toggleCheckbox);
-        // Hacer que el texto sea interactivo y reaccione de la misma manera que el checkbox
-        fixedText.setInteractive();
-        fixedText.on('pointerdown', toggleCheckbox);
-        // Fijar el checkbox y el texto para que no se desplacen con la cámara
-        checkbox.setScrollFactor(0);
-        fixedText.setScrollFactor(0);  
-
-
-
-	 		
-
-
-
-
 		 
         } //END CREATE UISCENE
             
