@@ -194,61 +194,13 @@ onPointerDown(pointer) {
 	const nuevoJugador = { name: name, puntos: puntos, color: color };
 	topplayers.push(nuevoJugador);
 }
-getTopPlayers() {
-	const sortedPlayers = topplayers.sort((a, b) => b.puntos - a.puntos);
-	const topPlayersx = sortedPlayers.slice(0, 5);
-	topPlayersx.forEach(topplayer => { });
-	return topPlayersx;
-}	
-
-//GAME OVER FUNCTION	
-gameOver(){
-	let pointsText = fixedText6.text;
-
-    // Encuentra el elemento HTML
-    let pointsElement = document.getElementById('points');
-
-    // Actualiza el texto del elemento con el puntaje
-    pointsElement.innerText = pointsText;
-
-	document.getElementById("retryBox").style.visibility = "visible";
-	var retryButton = document.getElementById("retryButton");
-	retryButton.onclick = function() {
-	console.log("Retry Game.");
-	location.reload();
-	};	
-}
-
-//DRAW GREEN CIRCLES!!!!!!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?		
 }  
-
-
-//UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 	
-//UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 	
-//UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 	
-//UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 	
-//UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 	
+	
 //UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 		
 class UIScene extends Phaser.Scene {
         constructor() {super({ key: 'UIScene' });}
