@@ -350,7 +350,142 @@ class UIScene extends Phaser.Scene {
 	let zoomFactor = this.cameras.main.zoom; 
 	let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
 
+//	const textResolution = dpi > 1 ? dpi * 2 : dpi;
+	 
 		 
+fixedText1 = this.add.text(10, 10, '', { fontSize: '16px', fill: '#ffffff'  , resolution: dpi * 2 , fontFamily: 'Roboto' });
+fixedText1.setShadow(2, 2, 'blue', 5);
+fixedText2 = this.add.text(10, 30, '', { fontSize: '16px', fill: '#ffffff'  , resolution: dpi * 2   , fontFamily: 'Roboto' });
+fixedText2.setShadow(2, 2, 'blue', 5);
+fixedText3 = this.add.text(10, 50, '', { fontSize: '16px', fill: '#ffffff'  , resolution: dpi * 2  , fontFamily: 'Roboto' });
+fixedText4 = this.add.text(10, 70, '', { fontSize: '16px', fill: '#ffffff'  , resolution: dpi * 2   , fontFamily: 'Roboto' });
+fixedText5 = this.add.text(10, 90, '', { fontSize: '16px', fill: '#ffffff'  , resolution: dpi * 2   , fontFamily: 'Roboto' });
+fixedText6 = this.add.text(window.innerWidth * dpi - 10, 10 * dpi, 'Points: 0', { fontSize: '16px', fill: '#ffffff'   , resolution: dpi * 2  , fontFamily: 'Roboto' });
+fixedText7 = this.add.text(window.innerWidth * dpi - 10, 10 * dpi, 'X2 SPEED - 5 s', { fontSize: '16px', fill: '#ffffff'   , resolution: dpi * 2  , fontFamily: 'Roboto' });
+        // Hace que los textos no se muevan con la cámara
+fixedText1.setScrollFactor(0);
+fixedText2.setScrollFactor(0);
+fixedText3.setScrollFactor(0);
+fixedText4.setScrollFactor(0);
+fixedText5.setScrollFactor(0);
+fixedText6.setScrollFactor(0);
+fixedText7.setScrollFactor(0);
+
+fixedText3.setShadow(2, 2, 'blue', 5);
+fixedText4.setShadow(2, 2, 'blue', 5);
+fixedText5.setShadow(2, 2, 'blue', 5);
+fixedText6.setShadow(2, 2, 'blue', 5);
+fixedText7.setShadow(2, 2, 'blue', 5);
+		 
+
+fixedText1.setPosition( 	
+worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10, 
+worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 10); 
+
+fixedText2.setPosition( 	
+worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10, 
+worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 30); 
+
+fixedText3.setPosition( 	
+worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10, 
+worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 50); 
+
+fixedText4.setPosition( 	
+worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10, 
+worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 70); 
+
+fixedText5.setPosition( 	
+worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10, 
+worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 90); 
+
+fixedText6.setPosition(worldPoint.x + (this.cameras.main.width / 2) / zoomFactor - fixedText6.width - 20, 
+worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 10);
+
+		 
+fixedText7.visible = false;
+fixedText7.setPosition(worldPoint.x + (this.cameras.main.width / 2) / zoomFactor - fixedText7.width - 20, 
+worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 30);
+//fixedText7.setText("");
+
+//CHECKBOXES FOR ZOOM AND CAMERA		 
+let lineWidth = 2; 	
+let boxSize = 20;
+let boxX = worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10;
+let boxY = worldPoint.y + (this.cameras.main.height / 2) / zoomFactor - boxSize*2 - 20;
+// Añadir texto fijo en la pantalla y centrarlo verticalmente con el checkbox
+let textYOffset = boxSize / 2;
+let staticText = this.add.text(boxX + boxSize + 10, boxY + textYOffset, 'Zoom', { fontSize: '16px', fill: '#ffffff' , resolution: dpi * 2 , fontFamily: 'Roboto'   });
+staticText.setShadow(2, 2, 'blue', 5);
+staticText.setOrigin(0, 0.5); // Ajuste vertical para centrar con el checkbox
+staticText.setScrollFactor(0); // Esto fija el texto para que no se desplace con la cámara
+// Crear el gráfico del checkbox
+let box = this.add.graphics();
+// Dibujar el checkbox
+box.fillStyle(0x00ff00); // Color verde
+box.fillRect(boxX, boxY, boxSize, boxSize);
+// Estado inicial del checkbox
+let isBoxChecked = true;
+// Función para dibujar o borrar la "X"
+let drawBoxCheck = (isBoxChecked) => {
+    box.clear();
+    box.fillStyle(0x00ff00); // Color verde
+    box.fillRect(boxX, boxY, boxSize, boxSize);
+    if (isBoxChecked) {
+        box.lineStyle(lineWidth, 0x000000); // Color negro para la "X"
+        box.beginPath();
+        box.moveTo(boxX, boxY);
+        box.lineTo(boxX + boxSize, boxY + boxSize);
+        box.moveTo(boxX + boxSize, boxY);
+        box.lineTo(boxX, boxY + boxSize);
+        box.strokePath();
+    }
+};
+// Dibujar el estado inicial del checkbox
+drawBoxCheck(isBoxChecked);
+// Hacer que el checkbox sea interactivo
+let hitAreaBox = new Phaser.Geom.Rectangle(boxX, boxY, boxSize, boxSize);
+box.setInteractive(hitAreaBox, Phaser.Geom.Rectangle.Contains);
+let toggleBox = () => {
+    	isBoxChecked = !isBoxChecked;
+    	drawBoxCheck(isBoxChecked); 
+    	checkSecure = 1;
+    	ZoomOut = 1;
+	let playerLocal = players[socket.id];
+    	if (isBoxChecked) {
+        //this.cameras.main.setZoom(8 / dpi);
+		//this.scene.get('GameScene').cameras.main.setZoom(8 / dpi);
+        //let zoomFactor = this.cameras.main.zoom; 
+		const zoomLevel = isMobile ? 8 / dpi : 1 / dpi; // Menos zoom en PC
+                this.scene.get('GameScene').cameras.main.setZoom(zoomLevel);
+
+		    	ZoomOut = 1;
+
+		//playerLocal.fontSizePlayer(12);
+		Object.values(players).forEach(player => {
+    		player.fontSizePlayer(12); // Cambia el tamaño de la fuente a 24px para cada jugador
+		});
+    	} else {
+		const zoomLevel = isMobile ? 4 / dpi : 0.5 / dpi; // Menos zoom en PC
+                this.scene.get('GameScene').cameras.main.setZoom(zoomLevel);
+
+		    	ZoomOut = 2;
+
+		
+		//playerLocal.fontSizePlayer(24);
+		Object.values(players).forEach(player => {
+    		player.fontSizePlayer(24); // Cambia el tamaño de la fuente a 24px para cada jugador
+		});
+
+		
+    	}
+};
+box.on('pointerdown', toggleBox);
+// Hacer que el texto sea interactivo y reaccione de la misma manera que el checkbox
+staticText.setInteractive();
+staticText.on('pointerdown', toggleBox);
+// Fijar el checkbox y el texto para que no se desplacen con la cámara
+box.setScrollFactor(0);
+staticText.setScrollFactor(0);
 
 //CHECKBOX CAM MOVE//////////////////
 // Tamaño y posición del checkbox
