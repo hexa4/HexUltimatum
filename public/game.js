@@ -33,22 +33,17 @@ function startGame(playerName) {
 	let checkSecure = 0;
 	let Cam = 1;
 	const players = {}; // Usaremos un objeto para almacenar los jugadores
-	let topplayers = [];	
         let hexagonGroup,hexagonGroup2;
         let playerNameCircle;
 	let checkbox, fixedText, hitArea;
         let checkboxSize = 20;
         let isChecked = true;
-	let Velocidad = false;
-	let segundosRestantes = 5;
 	let intervalo;
 	const hexagonMap = [
         [{ direction: 'NE' }, { direction: 'E' }, { direction: 'SE' }, { direction: 'E' }],
         [{ direction: 'SW' }, { direction: 'ES' } ,{ direction: 'E' }, { direction: 'ES' }, { direction: 'E' }],
         [{ direction: 'SW' }, { direction: 'ES' }, { direction: 'E' }, { direction: 'ES' }, { direction: 'E' }]
     	];
-
-
 
 ///GAMESCENE///////!?!?!?!?!?!??!?!?!?!?!?!?!?!?!?!?!?!?!??! /// /// ////// /// ////// /// ////// /// ////// /// ////// /// ////// /// ///
 ///GAMESCENE///////!?!?!?!?!?!??!?!?!?!?!?!?!?!?!?!?!?!?!??! /// /// ////// /// ////// /// ////// /// ////// /// ////// /// ////// /// ///
@@ -61,18 +56,12 @@ class GameScene extends Phaser.Scene {
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene 
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene 
         create() {		
-
-
-	
-	
-   
+			
 //CAM ZOOM INITIALIZATION
 const zoomLevel = isMobile ? 8 / dpi : 1 / dpi; // Menos zoom en PC
 this.cameras.main.setZoom(zoomLevel);
 let zoomFactor = this.cameras.main.zoom; 
 let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
-
-
 
 //HEXAGONAL MAP INITIALIZATION		
 //hexagonGraphics2 = this.add.graphics({ lineStyle: { width: 6, color: 0x0077ff, alpha: 0.2 } });
@@ -125,10 +114,8 @@ const randomHex = hexagons[Phaser.Math.Between(0, hexagons.length - 1)];
 const randomVertex = this.getHexVertices(randomHex.x, randomHex.y)[Phaser.Math.Between(0, 5)];
 player = this.add.circle(randomVertex.x, randomVertex.y, 0, 0xffffff);
 
-
 game.scene.start('UIScene');
 game.scene.bringToTop('UIScene');
-
 	
 }
 //END CREATE GAME SCENE END CREATE
@@ -185,7 +172,6 @@ onPointerDown(pointer) {
 } //END POINTER CLICK
 
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
-///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?		
 }  
 	
@@ -203,9 +189,6 @@ class UIScene extends Phaser.Scene {
 
 //	const textResolution = dpi > 1 ? dpi * 2 : dpi;
 	 
-		 
-
-
 //CHECKBOXES FOR ZOOM AND CAMERA		 
 let lineWidth = 2; 	
 let boxSize = 20;
@@ -277,32 +260,6 @@ fixedText.setShadow(2, 2, 'blue', 5);
 fixedText.setOrigin(0, 0.5); // Ajuste vertical para centrar con el checkbox
 fixedText.setScrollFactor(0); // Esto fija el texto para que no se desplace con la cámara
 // Crear el gráfico del checkbox
-let checkbox = this.add.graphics();
-// Dibujar el checkbox
-checkbox.fillStyle(0x00ff00); // Color verde
-checkbox.fillRect(checkboxX, checkboxY, checkboxSize, checkboxSize);
-// Estado inicial del checkbox
-let isChecked = true;
-// Función para dibujar o borrar la "X"
-        let drawCheck = (isChecked) => {
-            checkbox.clear();
-            checkbox.fillStyle(0x00ff00); // Color verde
-            checkbox.fillRect(checkboxX, checkboxY, checkboxSize, checkboxSize);
-            if (isChecked) {
-                checkbox.lineStyle(lineWidth, 0x000000); // Color negro para la "X"
-                checkbox.beginPath();
-                checkbox.moveTo(checkboxX, checkboxY);
-                checkbox.lineTo(checkboxX + checkboxSize, checkboxY + checkboxSize);
-                checkbox.moveTo(checkboxX + checkboxSize, checkboxY);
-                checkbox.lineTo(checkboxX, checkboxY + checkboxSize);
-                checkbox.strokePath();
-            }
-        };
-        // Dibujar el estado inicial del checkbox
-        drawCheck(isChecked);
-        // Hacer que el checkbox sea interactivo
-        let hitArea = new Phaser.Geom.Rectangle(checkboxX, checkboxY, checkboxSize, checkboxSize);
-        checkbox.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
 		 
         } //END CREATE UISCENE
             
@@ -311,9 +268,7 @@ let isChecked = true;
 	}
          
 }
-//END UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 	
-//END UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 	
-//END UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 	
+//END UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 		
 //END UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 	
 
 //CONFIG SCENEN/////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -329,13 +284,10 @@ let isChecked = true;
         			} },
             backgroundColor: '#000000',
 		      //      backgroundColor: '#0B1E00',
-
             scale: {
               // mode: Phaser.Scale.FIT,
 		//mode: Phaser.Scale.RESIZE, // Mantén el tamaño del juego fijo
-
 		        mode: isMobile ? Phaser.Scale.RESIZE : Phaser.Scale.RESIZE,
-
                 autoCenter: Phaser.Scale.CENTER_BOTH
             },
         	scene: [GameScene, UIScene],
@@ -349,8 +301,6 @@ antialias: true,
         pixelArt: false,
         antialias: true,
     },
-
-
 */
         };
 
