@@ -354,42 +354,6 @@ class UIScene extends Phaser.Scene {
 	 
 		 
 
-
-//CHECKBOXES FOR ZOOM AND CAMERA		 
-let lineWidth = 2; 	
-let boxSize = 20;
-let boxX = worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10;
-let boxY = worldPoint.y + (this.cameras.main.height / 2) / zoomFactor - boxSize*2 - 20;
-// Añadir texto fijo en la pantalla y centrarlo verticalmente con el checkbox
-let textYOffset = boxSize / 2;
-let staticText = this.add.text(boxX + boxSize + 10, boxY + textYOffset, 'Zoom', { fontSize: '16px', fill: '#ffffff' , resolution: dpi * 2 , fontFamily: 'Roboto'   });
-staticText.setShadow(2, 2, 'blue', 5);
-staticText.setOrigin(0, 0.5); // Ajuste vertical para centrar con el checkbox
-staticText.setScrollFactor(0); // Esto fija el texto para que no se desplace con la cámara
-// Crear el gráfico del checkbox
-let box = this.add.graphics();
-// Dibujar el checkbox
-box.fillStyle(0x00ff00); // Color verde
-box.fillRect(boxX, boxY, boxSize, boxSize);
-// Estado inicial del checkbox
-let isBoxChecked = true;
-// Función para dibujar o borrar la "X"
-let drawBoxCheck = (isBoxChecked) => {
-    box.clear();
-    box.fillStyle(0x00ff00); // Color verde
-    box.fillRect(boxX, boxY, boxSize, boxSize);
-    if (isBoxChecked) {
-        box.lineStyle(lineWidth, 0x000000); // Color negro para la "X"
-        box.beginPath();
-        box.moveTo(boxX, boxY);
-        box.lineTo(boxX + boxSize, boxY + boxSize);
-        box.moveTo(boxX + boxSize, boxY);
-        box.lineTo(boxX, boxY + boxSize);
-        box.strokePath();
-    }
-};
-// Dibujar el estado inicial del checkbox
-drawBoxCheck(isBoxChecked);
 // Hacer que el checkbox sea interactivo
 let hitAreaBox = new Phaser.Geom.Rectangle(boxX, boxY, boxSize, boxSize);
 box.setInteractive(hitAreaBox, Phaser.Geom.Rectangle.Contains);
