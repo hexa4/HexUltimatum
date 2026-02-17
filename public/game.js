@@ -66,16 +66,7 @@ class GameScene extends Phaser.Scene {
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene 
         create() {		
 
-	//RECIBIR UPDATE POINTS AND SIZE Of PLAYER
-	socket.on('updatePuntos', function(myID, puntos) {
-	console.log('Recibido upDate Puntos:', myID, puntos);
-	const sizeCalc = (0.01 * puntos) + 0.2;		
-	players[myID].text.setText(players[myID].name + ' (' + puntos + ')');
-	players[myID].circle.setScale(sizeCalc); 
-	players[myID].puntos = puntos;
-	if(socket.id===myID)
-	fixedText6.setText('Points: '+puntos);
-	});	
+
 	
 	
    
@@ -257,38 +248,13 @@ findClosestRedVertexToClick(x, y) {
             }); return closestVertex;
 }
                                      
-//CLEAR RED VERTEX                                                                         
- clearRedVertices() {
-	redCirclesGroup.clear(true, true);  // Borra todos los elementos del grupo redCirclesGroup
-    	redVertices = []; 
-}
-		
-//UPDATE RED VERTEX POINTS        
-updateRedVertices(x, y) {
-	this.clearRedVertices.call(this);  
-    	const verticesInRadius = this.getVerticesInRadius(x, y, 60); // Radio de 60 píxeles
-    	verticesInRadius.forEach(vertex => { 
-    	redVertices.push({ x: vertex.x, y: vertex.y });
-    	//console.log(`redVertex: (${vertex.x}, ${vertex.y}) `);	
-   	const graphics = this.add.graphics();
-    	graphics.fillStyle(0xff0000, 1); // Color rojo, opacidad 1
-    	graphics.fillCircle(vertex.x, vertex.y, 4); // Dibuja un círculo en la posición (vertex.x, vertex.y) con radio 5
-	redCirclesGroup.add(graphics);                        
-    });         
-}       
-//END UPDATE RED VERTEX POINTS   
 		
 ///TOP PLATERS SYSTEM
  addPlayer(name, puntos, color) {
 	const nuevoJugador = { name: name, puntos: puntos, color: color };
 	topplayers.push(nuevoJugador);
 }
-getTopPlayers() {
-	const sortedPlayers = topplayers.sort((a, b) => b.puntos - a.puntos);
-	const topPlayersx = sortedPlayers.slice(0, 5);
-	topPlayersx.forEach(topplayer => { });
-	return topPlayersx;
-}	
+
 
 //GAME OVER FUNCTION	
 gameOver(){
@@ -352,60 +318,7 @@ class UIScene extends Phaser.Scene {
 
 //	const textResolution = dpi > 1 ? dpi * 2 : dpi;
 	 
-		 
-fixedText1 = this.add.text(10, 10, '', { fontSize: '16px', fill: '#ffffff'  , resolution: dpi * 2 , fontFamily: 'Roboto' });
-fixedText1.setShadow(2, 2, 'blue', 5);
-fixedText2 = this.add.text(10, 30, '', { fontSize: '16px', fill: '#ffffff'  , resolution: dpi * 2   , fontFamily: 'Roboto' });
-fixedText2.setShadow(2, 2, 'blue', 5);
-fixedText3 = this.add.text(10, 50, '', { fontSize: '16px', fill: '#ffffff'  , resolution: dpi * 2  , fontFamily: 'Roboto' });
-fixedText4 = this.add.text(10, 70, '', { fontSize: '16px', fill: '#ffffff'  , resolution: dpi * 2   , fontFamily: 'Roboto' });
-fixedText5 = this.add.text(10, 90, '', { fontSize: '16px', fill: '#ffffff'  , resolution: dpi * 2   , fontFamily: 'Roboto' });
-fixedText6 = this.add.text(window.innerWidth * dpi - 10, 10 * dpi, 'Points: 0', { fontSize: '16px', fill: '#ffffff'   , resolution: dpi * 2  , fontFamily: 'Roboto' });
-fixedText7 = this.add.text(window.innerWidth * dpi - 10, 10 * dpi, 'X2 SPEED - 5 s', { fontSize: '16px', fill: '#ffffff'   , resolution: dpi * 2  , fontFamily: 'Roboto' });
-        // Hace que los textos no se muevan con la cámara
-fixedText1.setScrollFactor(0);
-fixedText2.setScrollFactor(0);
-fixedText3.setScrollFactor(0);
-fixedText4.setScrollFactor(0);
-fixedText5.setScrollFactor(0);
-fixedText6.setScrollFactor(0);
-fixedText7.setScrollFactor(0);
 
-fixedText3.setShadow(2, 2, 'blue', 5);
-fixedText4.setShadow(2, 2, 'blue', 5);
-fixedText5.setShadow(2, 2, 'blue', 5);
-fixedText6.setShadow(2, 2, 'blue', 5);
-fixedText7.setShadow(2, 2, 'blue', 5);
-		 
-
-fixedText1.setPosition( 	
-worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10, 
-worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 10); 
-
-fixedText2.setPosition( 	
-worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10, 
-worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 30); 
-
-fixedText3.setPosition( 	
-worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10, 
-worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 50); 
-
-fixedText4.setPosition( 	
-worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10, 
-worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 70); 
-
-fixedText5.setPosition( 	
-worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10, 
-worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 90); 
-
-fixedText6.setPosition(worldPoint.x + (this.cameras.main.width / 2) / zoomFactor - fixedText6.width - 20, 
-worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 10);
-
-		 
-fixedText7.visible = false;
-fixedText7.setPosition(worldPoint.x + (this.cameras.main.width / 2) / zoomFactor - fixedText7.width - 20, 
-worldPoint.y - (this.cameras.main.height / 2) / zoomFactor + 30);
-//fixedText7.setText("");
 
 //CHECKBOXES FOR ZOOM AND CAMERA		 
 let lineWidth = 2; 	
