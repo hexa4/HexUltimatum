@@ -28,12 +28,10 @@ function startGame(playerName) {
         let hexagonHeight = Math.sqrt(3) * hexagonSize;
         let hexagons = [];
         let vertices = [];
-        let redVertices = [];
 	let ZoomOut = 1;
 	let noMover = false;
 	let checkSecure = 0;
 	let Cam = 1;
-	let fixedText1, fixedText2, fixedText3, fixedText4, fixedText5, fixedText6, fixedText7;
 	const players = {}; // Usaremos un objeto para almacenar los jugadores
 	let topplayers = [];	
         let hexagonGroup,hexagonGroup2;
@@ -186,16 +184,6 @@ onPointerDown(pointer) {
 	checkSecure = 0;
 } //END POINTER CLICK
 
-      
-//END UPDATE RED VERTEX POINTS   
-		
-///TOP PLATERS SYSTEM
- addPlayer(name, puntos, color) {
-	const nuevoJugador = { name: name, puntos: puntos, color: color };
-	topplayers.push(nuevoJugador);
-}
-
-
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?		
@@ -276,17 +264,7 @@ let toggleBox = () => {
     		player.fontSizePlayer(12); // Cambia el tamaño de la fuente a 24px para cada jugador
 		});
     	} else {
-		const zoomLevel = isMobile ? 4 / dpi : 0.5 / dpi; // Menos zoom en PC
-                this.scene.get('GameScene').cameras.main.setZoom(zoomLevel);
-
-		    	ZoomOut = 2;
-
-		
-		//playerLocal.fontSizePlayer(24);
-		Object.values(players).forEach(player => {
-    		player.fontSizePlayer(24); // Cambia el tamaño de la fuente a 24px para cada jugador
-		});
-
+	
 		
     	}
 };
