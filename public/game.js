@@ -256,10 +256,74 @@ findClosestRedVertexToClick(x, y) {
                 }
             }); return closestVertex;
 }
-
+                                     
+//CLEAR RED VERTEX                                                                         
+ clearRedVertices() {
+	redCirclesGroup.clear(true, true);  // Borra todos los elementos del grupo redCirclesGroup
+    	redVertices = []; 
+}
 		
-  
+//UPDATE RED VERTEX POINTS        
+updateRedVertices(x, y) {
+	this.clearRedVertices.call(this);  
+    	const verticesInRadius = this.getVerticesInRadius(x, y, 60); // Radio de 60 píxeles
+    	verticesInRadius.forEach(vertex => { 
+    	redVertices.push({ x: vertex.x, y: vertex.y });
+    	//console.log(`redVertex: (${vertex.x}, ${vertex.y}) `);	
+   	const graphics = this.add.graphics();
+    	graphics.fillStyle(0xff0000, 1); // Color rojo, opacidad 1
+    	graphics.fillCircle(vertex.x, vertex.y, 4); // Dibuja un círculo en la posición (vertex.x, vertex.y) con radio 5
+	redCirclesGroup.add(graphics);                        
+    });         
+}       
 //END UPDATE RED VERTEX POINTS   
+		
+///TOP PLATERS SYSTEM
+ addPlayer(name, puntos, color) {
+	const nuevoJugador = { name: name, puntos: puntos, color: color };
+	topplayers.push(nuevoJugador);
+}
+getTopPlayers() {
+	const sortedPlayers = topplayers.sort((a, b) => b.puntos - a.puntos);
+	const topPlayersx = sortedPlayers.slice(0, 5);
+	topPlayersx.forEach(topplayer => { });
+	return topPlayersx;
+}	
+
+//GAME OVER FUNCTION	
+gameOver(){
+	let pointsText = fixedText6.text;
+
+    // Encuentra el elemento HTML
+    let pointsElement = document.getElementById('points');
+
+    // Actualiza el texto del elemento con el puntaje
+    pointsElement.innerText = pointsText;
+
+	document.getElementById("retryBox").style.visibility = "visible";
+	var retryButton = document.getElementById("retryButton");
+	retryButton.onclick = function() {
+	console.log("Retry Game.");
+	location.reload();
+	};	
+}
+
+//DRAW GREEN CIRCLES!!!!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
