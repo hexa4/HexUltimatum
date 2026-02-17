@@ -66,16 +66,7 @@ class GameScene extends Phaser.Scene {
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene 
         create() {		
 
-	//RECIBIR UPDATE POINTS AND SIZE Of PLAYER
-	socket.on('updatePuntos', function(myID, puntos) {
-	console.log('Recibido upDate Puntos:', myID, puntos);
-	const sizeCalc = (0.01 * puntos) + 0.2;		
-	players[myID].text.setText(players[myID].name + ' (' + puntos + ')');
-	players[myID].circle.setScale(sizeCalc); 
-	players[myID].puntos = puntos;
-	if(socket.id===myID)
-	fixedText6.setText('Points: '+puntos);
-	});	
+
 	
 	
    
@@ -245,39 +236,11 @@ onPointerDown(pointer) {
 //FIND CLOSEST RED VERTEX  
 //FIND CLOSEST RED VERTEX            
 //FIND CLOSEST RED VERTEX                              
-findClosestRedVertexToClick(x, y) {
-            let closestVertex = null;
-            let minDistance = Infinity;
-            redVertices.forEach(vertex => {
-                const dist = Phaser.Math.Distance.Between(x, y, vertex.x, vertex.y);
-                if (dist < minDistance) {
-                    minDistance = dist;
-                    closestVertex = vertex;
-                }
-            }); return closestVertex;
-}
+
                                      
-//CLEAR RED VERTEX                                                                         
- clearRedVertices() {
-	redCirclesGroup.clear(true, true);  // Borra todos los elementos del grupo redCirclesGroup
-    	redVertices = []; 
-}
+
 		
-//UPDATE RED VERTEX POINTS        
-updateRedVertices(x, y) {
-	this.clearRedVertices.call(this);  
-    	const verticesInRadius = this.getVerticesInRadius(x, y, 60); // Radio de 60 píxeles
-    	verticesInRadius.forEach(vertex => { 
-    	redVertices.push({ x: vertex.x, y: vertex.y });
-    	//console.log(`redVertex: (${vertex.x}, ${vertex.y}) `);	
-   	const graphics = this.add.graphics();
-    	graphics.fillStyle(0xff0000, 1); // Color rojo, opacidad 1
-    	graphics.fillCircle(vertex.x, vertex.y, 4); // Dibuja un círculo en la posición (vertex.x, vertex.y) con radio 5
-	redCirclesGroup.add(graphics);                        
-    });         
-}       
-//END UPDATE RED VERTEX POINTS   
-		
+
 ///TOP PLATERS SYSTEM
  addPlayer(name, puntos, color) {
 	const nuevoJugador = { name: name, puntos: puntos, color: color };
