@@ -1,4 +1,4 @@
-let hexagonSize = 50;
+/*let hexagonSize = 50;
 let hexagonWidth = hexagonSize * 2;
 let hexagonHeight = Math.sqrt(3) * hexagonSize;
 let hexagons = [];
@@ -10,3 +10,4 @@ const hexagonMap = [
         [{ direction: 'SW' }, { direction: 'ES' }, { direction: 'E' }, { direction: 'ES' }, { direction: 'E' }]
 ];
     
+*/
