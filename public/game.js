@@ -203,6 +203,8 @@ let drawBoxCheck = (isBoxChecked) => {
     }
 };
 // Dibujar el estado inicial del checkbox
+
+/*			 
 drawBoxCheck(isBoxChecked);
 // Hacer que el checkbox sea interactivo
 let hitAreaBox = new Phaser.Geom.Rectangle(boxX, boxY, boxSize, boxSize);
@@ -220,30 +222,10 @@ let toggleBox = () => {
 		
     	}
 };
-			/* 
-box.on('pointerdown', toggleBox);
-// Hacer que el texto sea interactivo y reaccione de la misma manera que el checkbox
-staticText.setInteractive();
-staticText.on('pointerdown', toggleBox);
-// Fijar el checkbox y el texto para que no se desplacen con la cámara
-box.setScrollFactor(0);
-staticText.setScrollFactor(0);
 */
-//CHECKBOX CAM MOVE//////////////////
-// Tamaño y posición del checkbox
 
-			 /*
-let checkboxSize = 20;
-let checkboxX =   worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10 ;
-let checkboxY = worldPoint.y + (this.cameras.main.height / 2) / zoomFactor - checkboxSize - 10;
-// Añadir texto fijo en la pantalla y centrarlo verticalmente con el checkbox
-let textOffsetY = checkboxSize / 2;
-let fixedText = this.add.text(checkboxX + checkboxSize + 10, checkboxY + textOffsetY, 'Centered Cam', { fontSize: '16px', fill: '#ffffff' , resolution: dpi * 2   , fontFamily: 'Roboto'});
-fixedText.setShadow(2, 2, 'blue', 5);
-fixedText.setOrigin(0, 0.5); // Ajuste vertical para centrar con el checkbox
-fixedText.setScrollFactor(0); // Esto fija el texto para que no se desplace con la cámara
-// Crear el gráfico del checkbox
-	*/	 
+			 
+
         } //END CREATE UISCENE
             
         update() {}
