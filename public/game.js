@@ -220,6 +220,7 @@ let toggleBox = () => {
 		
     	}
 };
+			/* 
 box.on('pointerdown', toggleBox);
 // Hacer que el texto sea interactivo y reaccione de la misma manera que el checkbox
 staticText.setInteractive();
@@ -227,7 +228,7 @@ staticText.on('pointerdown', toggleBox);
 // Fijar el checkbox y el texto para que no se desplacen con la cámara
 box.setScrollFactor(0);
 staticText.setScrollFactor(0);
-
+*/
 //CHECKBOX CAM MOVE//////////////////
 // Tamaño y posición del checkbox
 let checkboxSize = 20;
