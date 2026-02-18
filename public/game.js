@@ -168,7 +168,7 @@ class UIScene extends Phaser.Scene {
 	let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
 
 //	const textResolution = dpi > 1 ? dpi * 2 : dpi;
-	 
+	 /*
 //CHECKBOXES FOR ZOOM AND CAMERA		 
 let lineWidth = 2; 	
 let boxSize = 20;
@@ -203,28 +203,7 @@ let drawBoxCheck = (isBoxChecked) => {
     }
 };
 // Dibujar el estado inicial del checkbox
-
-/*			 
-drawBoxCheck(isBoxChecked);
-// Hacer que el checkbox sea interactivo
-let hitAreaBox = new Phaser.Geom.Rectangle(boxX, boxY, boxSize, boxSize);
-box.setInteractive(hitAreaBox, Phaser.Geom.Rectangle.Contains);
-let toggleBox = () => {
-    	isBoxChecked = !isBoxChecked;
-    	drawBoxCheck(isBoxChecked); 
-    	checkSecure = 1;
-    	ZoomOut = 1;
-	let playerLocal = players[socket.id];
-    	if (isBoxChecked) {
-     
-    	} else {
-	
-		
-    	}
-};
-*/
-
-			 
+		*/	 
 
         } //END CREATE UISCENE
             
