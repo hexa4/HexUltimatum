@@ -149,27 +149,7 @@ getVerticesInRadius(x, y, radius) {
 }
 
 //CLICK EN LA PANTALLA  
-//CLICK EN LA PANTALLA            
-//CLICK EN LA PANTALLA                      
-onPointerDown(pointer) { 
-	if(checkSecure===0){
-        	if(noMover===false){
-        		noMover = true;
-        let cameraX = this.cameras.main.scrollX;
-    	let cameraY = this.cameras.main.scrollY;
-    	console.log(`Camera coordinates: (${cameraX}, ${cameraY})`); 
-	console.log(`Click: (${pointer.x + cameraX}, ${pointer.y + cameraY}) `);	
-        //console.log(`ClickW: (${pointer.worldX + cameraX}, ${pointer.worldY + cameraY}) `);	
-	let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
-	console.log(`World coordinates: (${worldPoint.x}, ${worldPoint.y})`);
-	//ENVIAR A SERVER QUE SE EJECUTE MOVIMIENTO EN TODOS
-	const player = players[socket.id];
-	let VelocidadValor = 0;
-	            
-	}
-	}
-	checkSecure = 0;
-} //END POINTER CLICK
+
 
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
 ///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?		
