@@ -1,14 +1,9 @@
-const dpi = window.devicePixelRatio;
-const width = window.innerWidth * dpi;
-const height = window.innerHeight * dpi;
-const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
+//VARIABLES DEL FORMULARIO INDEX
 let playerName;
 let playerNameInput = document.getElementById('playerName');
 let errorMessage = document.getElementById('errorMessage');
 let submitButton = document.getElementById('submitButton');
 const nameForm = document.getElementById('nameForm');
-
 ///FUNCION DEL BOTON JUGAR PLAY SE INICIA JUEGO
 submitButton.addEventListener('click', function() {
 playerName = playerNameInput.value.trim();      
@@ -19,26 +14,24 @@ nameForm.style.display = 'none';
 requestAnimationFrame(function() {
 startGame(playerName); });
 });
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+
+const dpi = window.devicePixelRatio;
+const width = window.innerWidth * dpi;
+const height = window.innerHeight * dpi;
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     
 function startGame(playerName) {
-   	let player;
-        let hexagonGraphics,hexagonGraphics2;
-        let hexagonSize = 50;
-        let hexagonWidth = hexagonSize * 2;
-        let hexagonHeight = Math.sqrt(3) * hexagonSize;
-        let hexagons = [];
-        let vertices = [];
-	let ZoomOut = 1;
-	let noMover = false;
-	let checkSecure = 0;
-	let Cam = 1;
+	let player;
+    let hexagonGraphics,hexagonGraphics2;
+    let hexagonSize = 50;
+    let hexagonWidth = hexagonSize * 2;
+    let hexagonHeight = Math.sqrt(3) * hexagonSize;
+    let hexagons = [];
+    let vertices = [];
 	const players = {}; // Usaremos un objeto para almacenar los jugadores
-        let hexagonGroup,hexagonGroup2;
-        let playerNameCircle;
-	let checkbox, fixedText, hitArea;
-        let checkboxSize = 20;
-        let isChecked = true;
-	let intervalo;
+    let hexagonGroup,hexagonGroup2;
 	const hexagonMap = [
         [{ direction: 'NE' }, { direction: 'E' }, { direction: 'SE' }, { direction: 'E' }],
         [{ direction: 'SW' }, { direction: 'ES' } ,{ direction: 'E' }, { direction: 'ES' }, { direction: 'E' }],
@@ -166,44 +159,6 @@ class UIScene extends Phaser.Scene {
         this.cameras.main.setZoom(zoomLevel);
 	let zoomFactor = this.cameras.main.zoom; 
 	let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
-
-//	const textResolution = dpi > 1 ? dpi * 2 : dpi;
-	 /*
-//CHECKBOXES FOR ZOOM AND CAMERA		 
-let lineWidth = 2; 	
-let boxSize = 20;
-let boxX = worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10;
-let boxY = worldPoint.y + (this.cameras.main.height / 2) / zoomFactor - boxSize*2 - 20;
-// Añadir texto fijo en la pantalla y centrarlo verticalmente con el checkbox
-let textYOffset = boxSize / 2;
-let staticText = this.add.text(boxX + boxSize + 10, boxY + textYOffset, 'Zoom', { fontSize: '16px', fill: '#ffffff' , resolution: dpi * 2 , fontFamily: 'Roboto'   });
-staticText.setShadow(2, 2, 'blue', 5);
-staticText.setOrigin(0, 0.5); // Ajuste vertical para centrar con el checkbox
-staticText.setScrollFactor(0); // Esto fija el texto para que no se desplace con la cámara
-// Crear el gráfico del checkbox
-let box = this.add.graphics();
-// Dibujar el checkbox
-box.fillStyle(0x00ff00); // Color verde
-box.fillRect(boxX, boxY, boxSize, boxSize);
-// Estado inicial del checkbox
-let isBoxChecked = true;
-// Función para dibujar o borrar la "X"
-let drawBoxCheck = (isBoxChecked) => {
-    box.clear();
-    box.fillStyle(0x00ff00); // Color verde
-    box.fillRect(boxX, boxY, boxSize, boxSize);
-    if (isBoxChecked) {
-        box.lineStyle(lineWidth, 0x000000); // Color negro para la "X"
-        box.beginPath();
-        box.moveTo(boxX, boxY);
-        box.lineTo(boxX + boxSize, boxY + boxSize);
-        box.moveTo(boxX + boxSize, boxY);
-        box.lineTo(boxX, boxY + boxSize);
-        box.strokePath();
-    }
-};
-// Dibujar el estado inicial del checkbox
-		*/	 
 
         } //END CREATE UISCENE
             
