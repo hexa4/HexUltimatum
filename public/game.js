@@ -231,6 +231,8 @@ staticText.setScrollFactor(0);
 */
 //CHECKBOX CAM MOVE//////////////////
 // Tamaño y posición del checkbox
+
+			 /*
 let checkboxSize = 20;
 let checkboxX =   worldPoint.x - (this.cameras.main.width / 2) / zoomFactor + 10 ;
 let checkboxY = worldPoint.y + (this.cameras.main.height / 2) / zoomFactor - checkboxSize - 10;
@@ -241,7 +243,7 @@ fixedText.setShadow(2, 2, 'blue', 5);
 fixedText.setOrigin(0, 0.5); // Ajuste vertical para centrar con el checkbox
 fixedText.setScrollFactor(0); // Esto fija el texto para que no se desplace con la cámara
 // Crear el gráfico del checkbox
-		 
+	*/	 
         } //END CREATE UISCENE
             
         update() {}
