@@ -30,7 +30,6 @@ function startGame(playerName) {
     let hexagonHeight = Math.sqrt(3) * hexagonSize;
     let hexagons = [];
     let vertices = [];
-	const players = {}; // Usaremos un objeto para almacenar los jugadores
     let hexagonGroup,hexagonGroup2;
 	const hexagonMap = [
         [{ direction: 'NE' }, { direction: 'E' }, { direction: 'SE' }, { direction: 'E' }],
@@ -43,76 +42,81 @@ function startGame(playerName) {
 ///GAMESCENE///////!?!?!?!?!?!??!?!?!?!?!?!?!?!?!?!?!?!?!??! /// /// ////// /// ////// /// ////// /// ////// /// ////// /// ////// /// ///
 
 class GameScene extends Phaser.Scene {
-        constructor() { super({ key: 'GameScene' }); }
-        preload() { }
+	constructor() { super({ key: 'GameScene' }); } preload() { }
 
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene 
+	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene 
-        create() {		
+
+    create() {		
 			
-//CAM ZOOM INITIALIZATION
-const zoomLevel = isMobile ? 8 / dpi : 1 / dpi; // Menos zoom en PC
-this.cameras.main.setZoom(zoomLevel);
-let zoomFactor = this.cameras.main.zoom; 
-let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
+	//CAM ZOOM INITIALIZATION
+	const zoomLevel = isMobile ? 8 / dpi : 1 / dpi; // Menos zoom en PC
+	this.cameras.main.setZoom(zoomLevel);
+	let zoomFactor = this.cameras.main.zoom; 
+	let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
 
-//HEXAGONAL MAP INITIALIZATION		
-//hexagonGraphics2 = this.add.graphics({ lineStyle: { width: 6, color: 0x0077ff, alpha: 0.2 } });
-//hexagonGraphics2 = this.add.graphics({ lineStyle: { width: 6, color: 0x808080 } });	
-		hexagonGraphics2 = this.add.graphics({
+	//HEXAGONAL MAP INITIALIZATION		
+	//hexagonGraphics2 = this.add.graphics({ lineStyle: { width: 6, color: 0x0077ff, alpha: 0.2 } });
+	//hexagonGraphics2 = this.add.graphics({ lineStyle: { width: 6, color: 0x808080 } });	
+	hexagonGraphics2 = this.add.graphics({
     lineStyle: { width: 6, color: 0x808080 },
     antialias: true // Intenta añadir esta propiedad si el renderizador lo permite
-});
-hexagonGroup2 = this.add.group();
-//hexagonGraphics = this.add.graphics({ lineStyle: { width: 2, color: 0x808080 } });
-hexagonGraphics = this.add.graphics({
+	});
+	hexagonGroup2 = this.add.group();
+	//hexagonGraphics = this.add.graphics({ lineStyle: { width: 2, color: 0x808080 } });
+		
+	hexagonGraphics = this.add.graphics({
     lineStyle: { width: 2, color: 0x0099ff },
     antialias: true // Intenta añadir esta propiedad si el renderizador lo permite
-});
-		
-hexagonGroup = this.add.group();
+	});
+	hexagonGroup = this.add.group();
 
-/*		
-for (let y = 0; y < hexagonMap.length; y++) {
-    for (let x = 0; x < hexagonMap[y].length; x++) {
-        let hexX = x * hexagonWidth * 0.75;
-        let hexY = y * hexagonHeight + (x % 2 === 0 ? 0 : hexagonHeight / 2);
-        // Opcional: Usa la dirección del hexágono si es necesario
-        let direction = hexagonMap[y][x].direction;
-        //console.log(`Hexágono en (${x}, ${y}) tiene dirección: ${direction}`);
-        this.drawHexagon2(hexX, hexY, hexagonSize);
-        hexagons.push({ x: hexX, y: hexY });
-        vertices.push(...this.getHexVertices(hexX, hexY));
-        hexagonGroup2.add(hexagonGraphics2); // Añadir el gráfico del hexágono al grupo
-    }
-}  
+	/*		
+	for (let y = 0; y < hexagonMap.length; y++) {
+    	for (let x = 0; x < hexagonMap[y].length; x++) {
+        	let hexX = x * hexagonWidth * 0.75;
+        	let hexY = y * hexagonHeight + (x % 2 === 0 ? 0 : hexagonHeight / 2);
+        	// Opcional: Usa la dirección del hexágono si es necesario
+        	let direction = hexagonMap[y][x].direction;
+        	//console.log(`Hexágono en (${x}, ${y}) tiene dirección: ${direction}`);
+        	this.drawHexagon2(hexX, hexY, hexagonSize);
+        	hexagons.push({ x: hexX, y: hexY });
+        	vertices.push(...this.getHexVertices(hexX, hexY));
+        	hexagonGroup2.add(hexagonGraphics2); // Añadir el gráfico del hexágono al grupo
+    	}
+	}  
 	*/	
-// Crear el mapa hexagonal
-for (let y = 0; y < hexagonMap.length; y++) {
-    for (let x = 0; x < hexagonMap[y].length; x++) {
-        let hexX = x * hexagonWidth * 0.75;
-        let hexY = y * hexagonHeight + (x % 2 === 0 ? 0 : hexagonHeight / 2);
-        // Opcional: Usa la dirección del hexágono si es necesario
-        let direction = hexagonMap[y][x].direction;
-       	//console.log(`Hexágono en (${x}, ${y}) tiene dirección: ${direction}`);
-        this.drawHexagon(hexX, hexY, hexagonSize);
-        hexagons.push({ x: hexX, y: hexY });
-        vertices.push(...this.getHexVertices(hexX, hexY));
-        hexagonGroup.add(hexagonGraphics); // Añadir el gráfico del hexágono al grupo
-    }
-}
+		
+	// Crear el mapa hexagonal
+	for (let y = 0; y < hexagonMap.length; y++) {
+    	for (let x = 0; x < hexagonMap[y].length; x++) {
+        	let hexX = x * hexagonWidth * 0.75;
+        	let hexY = y * hexagonHeight + (x % 2 === 0 ? 0 : hexagonHeight / 2);
+        	// Opcional: Usa la dirección del hexágono si es necesario
+        	let direction = hexagonMap[y][x].direction;
+       		//console.log(`Hexágono en (${x}, ${y}) tiene dirección: ${direction}`);
+        	this.drawHexagon(hexX, hexY, hexagonSize);
+        	hexagons.push({ x: hexX, y: hexY });
+        	vertices.push(...this.getHexVertices(hexX, hexY));
+        	hexagonGroup.add(hexagonGraphics); // Añadir el gráfico del hexágono al grupo
+    	}
+	}
 
-// Crear el jugador en un vértice aleatorio
-const randomHex = hexagons[Phaser.Math.Between(0, hexagons.length - 1)];
-const randomVertex = this.getHexVertices(randomHex.x, randomHex.y)[Phaser.Math.Between(0, 5)];
-player = this.add.circle(randomVertex.x, randomVertex.y, 0, 0xffffff);
-
-game.scene.start('UIScene');
-game.scene.bringToTop('UIScene');
+		/*
+	// Crear el jugador en un vértice aleatorio
+	const randomHex = hexagons[Phaser.Math.Between(0, hexagons.length - 1)];
+	const randomVertex = this.getHexVertices(randomHex.x, randomHex.y)[Phaser.Math.Between(0, 5)];
+	player = this.add.circle(randomVertex.x, randomVertex.y, 0, 0xffffff);
+*/
+	game.scene.start('UIScene');
+	game.scene.bringToTop('UIScene');
 	
 }
-//END CREATE GAME SCENE END CREATE
-//END CREATE GAME SCENE END CREATE
+//END CREATE GAME SCENE END CREATE///END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE//
+//END CREATE GAME SCENE END CREATE///END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE//
+//END CREATE GAME SCENE END CREATE///END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE//
+
 
 
 update() { }
