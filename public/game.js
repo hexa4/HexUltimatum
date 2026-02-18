@@ -42,12 +42,11 @@ function startGame(playerName) {
 ///GAMESCENE///////!?!?!?!?!?!??!?!?!?!?!?!?!?!?!?!?!?!?!??! /// /// ////// /// ////// /// ////// /// ////// /// ////// /// ////// /// ///
 
 class GameScene extends Phaser.Scene {
-	constructor() { super({ key: 'GameScene' }); } preload() { }
 
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene 
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene
 	//CREATE GameScene //CREATE GameScene //CREATE GameScene //CREATE GameScene 
-
+	constructor() { super({ key: 'GameScene' }); } preload() { }
     create() {		
 			
 	//CAM ZOOM INITIALIZATION
@@ -103,33 +102,25 @@ class GameScene extends Phaser.Scene {
     	}
 	}
 
-		/*
-	// Crear el jugador en un vértice aleatorio
-	const randomHex = hexagons[Phaser.Math.Between(0, hexagons.length - 1)];
-	const randomVertex = this.getHexVertices(randomHex.x, randomHex.y)[Phaser.Math.Between(0, 5)];
-	player = this.add.circle(randomVertex.x, randomVertex.y, 0, 0xffffff);
-*/
 	game.scene.start('UIScene');
 	game.scene.bringToTop('UIScene');
-	
 }
 //END CREATE GAME SCENE END CREATE///END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE//
 //END CREATE GAME SCENE END CREATE///END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE//
 //END CREATE GAME SCENE END CREATE///END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE/////END CREATE//
-
-
-
 update() { }
 
-drawHexagon(x, y, size) {
-	const points = this.getHexVertices(x, y, size);
+	drawHexagon(x, y, size) {
+		const points = this.getHexVertices(x, y, size);
         hexagonGraphics.strokePoints(points, true);
-}
-drawHexagon2(x, y, size) {
-	const points = this.getHexVertices(x, y, size);
+	}
+
+	drawHexagon2(x, y, size) {
+		const points = this.getHexVertices(x, y, size);
         hexagonGraphics2.strokePoints(points, true);
-}
-getHexVertices(x, y, size = hexagonSize) {
+	}
+	
+	getHexVertices(x, y, size = hexagonSize) {
         const points = [];
         for (let i = 0; i < 6; i++) {
                 const angle = Phaser.Math.DegToRad(60 * i);
@@ -137,77 +128,78 @@ getHexVertices(x, y, size = hexagonSize) {
                 const py = y + size * Math.sin(angle);
                 points.push(new Phaser.Geom.Point(px, py));
         } return points;
-}
+	}
 
-getVerticesInRadius(x, y, radius) {
+	getVerticesInRadius(x, y, radius) {
 		return vertices.filter(vertex => {
-                let distance = Phaser.Math.Distance.Between(x, y, vertex.x, vertex.y);
-                return distance <= radius && distance > 20; });
-}
-
-//CLICK EN LA PANTALLA  
+        let distance = Phaser.Math.Distance.Between(x, y, vertex.x, vertex.y);
+        return distance <= radius && distance > 20; });
+	}
 
 
-///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?	
-///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?		
+///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?		
+///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?		
+///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?///GAMESCENE END !!!/!?!?!?!?!?!?!?!?!?!?		
 }  
 	
+//UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 
 //UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 		
+//UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 			
 class UIScene extends Phaser.Scene {
-        constructor() {super({ key: 'UIScene' });}
-        
-         create() {
-         console.log(`INICIADO UISCENE!!!!`);
-
-	const zoomLevel = isMobile ? 8 / dpi : 1 / dpi; // Menos zoom en PC
+	constructor() {super({ key: 'UIScene' });}
+    create() {
+    	console.log(`INICIADO UISCENE!!!!`);
+		const zoomLevel = isMobile ? 8 / dpi : 1 / dpi; // Menos zoom en PC
         this.cameras.main.setZoom(zoomLevel);
-	let zoomFactor = this.cameras.main.zoom; 
-	let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
-
-        } //END CREATE UISCENE
+		let zoomFactor = this.cameras.main.zoom; 
+		let worldPoint = this.cameras.main.getWorldPoint(this.cameras.main.width / 2, this.cameras.main.height / 2);
+	} //END CREATE UISCENE
             
-        update() {}
-        preload() {
-	}
-         
+    update() { } preload() { }      
 }
 //END UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 		
-//END UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 	
+//END UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / /
+//END UISCENE!!!!!!////!!! / / /// // / / / / / / / / // / / / / / / 		
 
+//CONFIG SCENEN/////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	
 //CONFIG SCENEN/////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        const config = {
-            type: Phaser.AUTO,
-            width: width,
-            height: height,
-		physics: {
-        	default: 'arcade',
-        	arcade: {
+const config = {
+	type: Phaser.AUTO,
+	width: width,
+	height: height,
+	physics: 
+	{
+        default: 'arcade',
+        arcade: 
+		{
             gravity: { y: 0 }, // Puedes ajustar la gravedad según lo necesites
             debug: false // Puedes activar esto para ver los cuerpos de colisión
-        			} },
-            backgroundColor: '#000000',
-		      //      backgroundColor: '#0B1E00',
-            scale: {
-              // mode: Phaser.Scale.FIT,
+        } 
+	},
+    backgroundColor:'#000000',
+	//backgroundColor:'#0B1E00',
+    scale: 
+		{
+    	//mode: Phaser.Scale.FIT,
 		//mode: Phaser.Scale.RESIZE, // Mantén el tamaño del juego fijo
-		        mode: isMobile ? Phaser.Scale.RESIZE : Phaser.Scale.RESIZE,
-                autoCenter: Phaser.Scale.CENTER_BOTH
-            },
-        	scene: [GameScene, UIScene],
-           pixelArt: false,
-//pixelArt: true,
-            roundPixels: false,
-antialias: true,
-		resolution: window.devicePixelRatio * 2
-
-		/* render: {
-        pixelArt: false,
+		mode: isMobile ? Phaser.Scale.RESIZE : Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+        },
+    scene: [GameScene, UIScene],
+    pixelArt: false,
+	//pixelArt: true,
+    roundPixels: false,
+	antialias: true,
+	resolution: window.devicePixelRatio * 2
+	/*render: 
+	{
+    	pixelArt: false,
         antialias: true,
     },
-*/
-        };
+	*/
+};
 
-        const game = new Phaser.Game(config);
+	const game = new Phaser.Game(config);
 	game.scene.start('GameScene');
 
 	
