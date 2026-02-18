@@ -63,7 +63,6 @@ class GameScene extends Phaser.Scene {
     antialias: true // Intenta añadir esta propiedad si el renderizador lo permite
 	});
 	hexagonGroup2 = this.add.group();
-	//hexagonGraphics = this.add.graphics({ lineStyle: { width: 2, color: 0x808080 } });
 		
 	hexagonGraphics = this.add.graphics({
     lineStyle: { width: 2, color: 0x0099ff },
@@ -71,7 +70,7 @@ class GameScene extends Phaser.Scene {
 	});
 	hexagonGroup = this.add.group();
 
-	/*		
+		
 	for (let y = 0; y < hexagonMap.length; y++) {
     	for (let x = 0; x < hexagonMap[y].length; x++) {
         	let hexX = x * hexagonWidth * 0.75;
@@ -85,7 +84,7 @@ class GameScene extends Phaser.Scene {
         	hexagonGroup2.add(hexagonGraphics2); // Añadir el gráfico del hexágono al grupo
     	}
 	}  
-	*/	
+		
 		
 	// Crear el mapa hexagonal
 	for (let y = 0; y < hexagonMap.length; y++) {
