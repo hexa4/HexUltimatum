@@ -189,7 +189,9 @@ const config = {
 	//pixelArt: true,
     roundPixels: false,
 	antialias: true,
-	resolution: window.devicePixelRatio * 2
+	//resolution: window.devicePixelRatio * 2
+		resolution: window.devicePixelRatio
+
 	/*render: 
 	{
     	pixelArt: false,
