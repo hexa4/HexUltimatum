@@ -101,19 +101,6 @@ class GameScene extends Phaser.Scene {
     	}
 	}
 		
-///PRUEBAS
-	for (let y = 0; y < hexagonMap.length; y++) {
-    for (let x = 0; x < hexagonMap[y].length; x++) {
-
-        let hexX = x * hexagonWidth * 0.75;
-        let hexY = y * hexagonHeight + (x % 2 === 0 ? 0 : hexagonHeight / 2);
-
-        this.drawHexagon(hexX, hexY, hexagonSize);
-    }
-}
-// 👇 mover cámara al centro del mapa
-this.cameras.main.centerOn(mapWidth / 2, mapHeight / 2);
-///PRUEBAS END
 
 	game.scene.start('UIScene');
 	game.scene.bringToTop('UIScene');
@@ -203,8 +190,8 @@ const config = {
 	//pixelArt: true,
     roundPixels: false,
 	antialias: true,
-	//resolution: window.devicePixelRatio * 2
-		resolution: window.devicePixelRatio
+	resolution: window.devicePixelRatio * 2
+		//resolution: window.devicePixelRatio
 
 	/*render: 
 	{
