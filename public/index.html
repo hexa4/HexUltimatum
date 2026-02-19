@@ -3,21 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego Hexagonal en Phaser</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <title>HexArena</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
-       <script src="/socket.io/socket.io.js"></script> <!-- Asegúrate de que esta línea está presente -->
+    <script src="/socket.io/socket.io.js"></script> <!-- Asegúrate de que esta línea está presente -->
     <link rel="stylesheet" href="style.css">
     <style> </style>
-
-
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
-
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
 
 <!-- GAME OVER RETRY BOX !!!!!!!!! -->	
 <!-- GAME OVER RETRY BOX !!!!!!!!! -->		
@@ -36,16 +30,11 @@
 </div>
 <!-- END GAME OVER RETRY BOX !!!!!!!!! -->		
 
-
-
-
 <!-- HOME NAME FORM !!!!!!!!! -->
 <!-- HOME NAME FORM !!!!!!!!! -->	
 <!-- HOME NAME FORM !!!!!!!!! -->		
 <div class="center-box">	
 <form id="nameForm">
-
-
 		
 <!-- HOME NAME FORM !!!!!!!!! -->
 <!-- HOME NAME FORM !!!!!!!!! -->	
@@ -74,17 +63,16 @@
 
 <div id="errorMessage" style="display: none; color: red;">The player's name must be between 1 and 20 characters.</div>	
 	
-	
 <button type="button" id="submitButton">
-<img src="images/play.png" alt="PLAY" >
+	<img src="images/play.png" alt="PLAY" >
 </button>
 
 <button type="button" id="customPlayer">
-<img src="images/skin.png" alt="SKIN" >
+	<img src="images/skin.png" alt="SKIN" >
 </button>
 
 <button type="button" id="highscoreButton">
-<img src="images/highscore.png" alt="HIGHSCORE" >
+	<img src="images/highscore.png" alt="HIGHSCORE" >
 </button>
 
 </div>	
@@ -93,34 +81,26 @@
 </form>
 </div>
 
-
-
 <!-- HS BOX !!!!!!!!! -->
 <!-- Hs BOX !!!!!!!!! -->		
 <!-- Hs BOX !!!!!!!!! -->
 <div id="highscoreDiv">	
-<img src="images/highscore.png" alt="HIGHSCORE" id="texto3dImage">
-<button id="closeHighscore">
-<img src="images/x.png" alt="CLOSE">
-</button>
-<div id="scorelistS">	
-
-<div id="scorelist">	
-</div>		
-	
-</div>		
-
+	<img src="images/highscore.png" alt="HIGHSCORE" id="texto3dImage">
+	<button id="closeHighscore">
+	<img src="images/x.png" alt="CLOSE">
+	</button>
+	<div id="scorelistS">	
+		<div id="scorelist"></div>			
+	</div>		
 </div>
 <!-- END Hs BOX !!!!!!!!! -->
-
-  
 
 
 <!-- SKIN BOX !!!!!!!!! -->
 <!-- SKIN BOX !!!!!!!!! -->		
 <!-- SKIN BOX !!!!!!!!! -->
 <div id="selectSkin">	
- <img src="images/selectyourskin.png" alt="SELECT YOUR SKIN" id="texto3dImage"> 
+<img src="images/selectyourskin.png" alt="SELECT YOUR SKIN" id="texto3dImage"> 
 
 <button id="closeSkin">
 <img src="images/x.png" alt="CLOSE">
@@ -155,8 +135,6 @@
 </div>
 </div>
 <!-- END SKIN BOX !!!!!!!!! -->
-
-
 
 
 <!-- PAINT CANVAS BOX !!!!!!!!! -->
@@ -202,115 +180,98 @@
 <!-- INSTRUCTIONS SCRIPT!!!!!!! -->		
 <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 
-
-
-
-
 <script>
-
 const socket = io();
-
-
 console.log(socket);
-
-
-
 anime({ targets: '#greenCircle circle', r: 6, duration: 1000, easing: 'easeInOutSine', direction: 'alternate', loop: true });
 </script>	
 
 <script>
-const texts = [
-{ message: "Collect green circles to grow your player", color: "#008001" },
-{ message: "Boost your speed by collecting blue circles", color: "blue" },
-{ message: "Compete with players worldwide", color: "" },
-{ message: "Battle to stay at the top of the high score!", color: "" }
-];
-
-const circleParent = document.getElementById("greenCircle");
-let currentIndex = 0;
-const textElement = document.getElementById("text");
-const circleElement = document.querySelector("#greenCircle circle");
-function changeContent() {
-textElement.classList.add("hidden");
-setTimeout(() => {
-currentIndex = (currentIndex + 1) % texts.length;
-textElement.textContent = texts[currentIndex].message;
-const existingCircle = circleParent.querySelector("circle");
-if (existingCircle) {
-circleParent.removeChild(existingCircle);
-}
-
-// If there's a color specified, create a new circle
-if (texts[currentIndex].color !== "") {
-const newCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-newCircle.setAttribute("cx", "50");
-newCircle.setAttribute("cy", "50");
-newCircle.setAttribute("r", "40");
-newCircle.setAttribute("fill", texts[currentIndex].color);
-circleParent.appendChild(newCircle);
-}
-textElement.classList.remove("hidden");
-}, 1000); // Wait for the opacity transition to complete (1 second)
-}
-setInterval(changeContent, 2000);
+	const texts = [
+	{ message: "Collect green circles to grow your player", color: "#008001" },
+	{ message: "Boost your speed by collecting blue circles", color: "blue" },
+	{ message: "Compete with players worldwide", color: "" },
+	{ message: "Battle to stay at the top of the high score!", color: "" }
+	];
+	const circleParent = document.getElementById("greenCircle");
+	let currentIndex = 0;
+	const textElement = document.getElementById("text");
+	const circleElement = document.querySelector("#greenCircle circle");
+	function changeContent() {
+		textElement.classList.add("hidden");
+		setTimeout(() => {
+			currentIndex = (currentIndex + 1) % texts.length;
+			textElement.textContent = texts[currentIndex].message;
+			const existingCircle = circleParent.querySelector("circle");
+			if (existingCircle) {
+				circleParent.removeChild(existingCircle);
+			}
+		// If there's a color specified, create a new circle
+		if (texts[currentIndex].color !== "") {
+			const newCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+			newCircle.setAttribute("cx", "50");
+			newCircle.setAttribute("cy", "50");
+			newCircle.setAttribute("r", "40");
+			newCircle.setAttribute("fill", texts[currentIndex].color);
+			circleParent.appendChild(newCircle);
+		}
+		textElement.classList.remove("hidden");
+		}, 1000); // Wait for the opacity transition to complete (1 second)
+	}
+	setInterval(changeContent, 2000);
 </script>
 <!-- END INSTRUCTIONS SCRIPT!!!!!!! -->	
 
 
-	<script src="playerSkin.js"></script>
-	<script src="lienzoFunciones.js"></script>
-
-
-  <script src="hexmap.js"></script>
-
-    <script src="game.js"></script>
+<script src="playerSkin.js"></script>
+<script src="lienzoFunciones.js"></script>
+<script src="hexmap.js"></script>
+<script src="game.js"></script>
     
 <script>
     document.getElementById('customPlayer').addEventListener('click', function () {
-document.getElementById('selectSkin').style.display = 'block';
-});
+		document.getElementById('selectSkin').style.display = 'block';
+	});
 
-
-//HOME HIGHScore BUTTON	
-document.getElementById('highscoreButton').addEventListener('click', function () {
-console.log('ENVIAR LISTA!');
-socket.emit('enviarLista');
-document.getElementById('highscoreDiv').style.display = 'block'; 
-});
+	//HOME HIGHScore BUTTON	
+	document.getElementById('highscoreButton').addEventListener('click', function () {
+		console.log('ENVIAR LISTA!');
+		socket.emit('enviarLista');
+		document.getElementById('highscoreDiv').style.display = 'block'; 
+	});
 
 //CLOSE PAINT BUTTON	
-document.getElementById('closePaint').addEventListener('click', function () {
-selectSkin.style.display = 'none';
-document.getElementById('paintBox').style.display = 'none';
-});	
+	document.getElementById('closePaint').addEventListener('click', function () {
+		selectSkin.style.display = 'none';
+		document.getElementById('paintBox').style.display = 'none';
+	});	
 
 //HIGHScore Close BUTTON	
-document.getElementById('closeHighscore').addEventListener('click', function () {
-document.getElementById('highscoreDiv').style.display = 'none';
-});
+	document.getElementById('closeHighscore').addEventListener('click', function () {
+		document.getElementById('highscoreDiv').style.display = 'none';
+	});
 
 //CALL HighScore Text from SERVER!!!!!!	
 //CALL HighScore Text from SERVER!!!!!!	
 //CALL HighScore Text from SERVER!!!!!!	
-socket.on('obtenerLista', function (jsonData) {
-let hscore = jsonData;
-console.log('Lista HS:', hscore);
-hscore.sort((a, b) => b.score - a.score);
-let topScores = hscore.slice(0, 20);
-// Get the scorelist div
-let scorelistDiv = document.getElementById('scorelist');
-// Generate the list items
-topScores.forEach((player, index) => {
-let listItem = document.createElement('div');
-listItem.className = 'score-item';
-listItem.style.color = player.color;
-listItem.textContent = `#${index + 1} ${player.name}: ${player.score}`;
-scorelistDiv.appendChild(listItem);
-});
-}); 
+	socket.on('obtenerLista', function (jsonData) {
+		let hscore = jsonData;
+		console.log('Lista HS:', hscore);
+		hscore.sort((a, b) => b.score - a.score);
+		let topScores = hscore.slice(0, 20);
+		// Get the scorelist div
+		let scorelistDiv = document.getElementById('scorelist');
+		// Generate the list items
+		topScores.forEach((player, index) => {
+			let listItem = document.createElement('div');
+			listItem.className = 'score-item';
+			listItem.style.color = player.color;
+			listItem.textContent = `#${index + 1} ${player.name}: ${player.score}`;
+			scorelistDiv.appendChild(listItem);
+		});
+	}); 
 </script>
-
-
+	
 
 </body>
 </html>
